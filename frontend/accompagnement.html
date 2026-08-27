@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AfricanYouth GiveBack — Déclarer un accompagnement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .acc-wrap{ max-width:560px; margin:0 auto; padding:36px 20px 60px; }
+  .acc-intro{ background:var(--paper-raised); border:1.5px solid var(--gold-soft); border-radius:14px; padding:18px 20px; margin:0 0 26px; font-family:Inter,sans-serif; font-size:13px; line-height:1.6; color:var(--ink); }
+  .acc-list{ margin-top:36px; }
+  .acc-item{ background:var(--paper-raised); border-radius:10px; padding:12px 16px; margin-bottom:10px; font-family:Inter,sans-serif; font-size:12.5px; }
+  .acc-item b{ color:var(--forest); }
+  .acc-item .meta{ color:var(--ink-soft); font-size:11px; margin-top:4px; }
+</style>
+</head>
+<body>
+
+<div class="flash-infos">
+  <span class="flash-infos-label">⚡ Flash infos</span>
+  <div class="flash-infos-track">
+    <span id="flashInfosText"><span id="flashAccompagnement"></span><span id="flashDeadline1" data-until="2026-08-31">📌 Deadline UEMOA, MAINSTREAM et Bourses Mastercard/2iE : 30-31 août 2026 — ne ratez pas la date&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; </span>🎓 <span id="flashOppCount">28+</span> opportunités vérifiées disponibles sur la plateforme&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; 🤝 <span id="flashMentorCount">9</span> mentors disponibles pour vous accompagner gratuitement&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; <img src="logo-mastercard-foundation.png" class="flash-infos-logo" alt="Mastercard Foundation">Un projet mené par des étudiants boursiers de la Mastercard Foundation à <img src="logo-2ie-officiel.png" class="flash-infos-logo" alt="Institut 2iE">l'Institut 2iE&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; 📱 Retrouvez-nous sur Facebook, LinkedIn et notre chaîne WhatsApp</span>
+  </div>
+</div>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack" class="brand-mark">
+    <div class="brand-text">
+      <div class="brand-word">AfricanYouth GiveBack</div>
+      <div class="brand-tagline">Éducation, accès aux opportunités</div>
+    </div>
+  </a>
+  <nav class="sans">
+    <a href="espace.html">← Retour à mon espace</a>
+    <a href="entretien.html">Déclarer un entretien terrain</a>
+  </nav>
+<script>
+(function () {
+  const page = (location.pathname.split("/").pop() || "index.html").replace(/\.html$/, "");
+  document.querySelectorAll("nav.sans a[href]").forEach(a => {
+    const hrefPage = a.getAttribute("href").replace(/\.html$/, "");
+    if (hrefPage === page || (page === "" && hrefPage === "index")) a.classList.add("page-active");
+  });
+})();
+</script>
+  <div class="social-icons-header">
+    <a href="https://www.facebook.com/profile.php?id=61593783893327" target="_blank" rel="noopener" class="social-icon social-fb" aria-label="Facebook" title="Facebook">f</a>
+    <a href="https://www.linkedin.com/company/144639927" target="_blank" rel="noopener" class="social-icon social-li" aria-label="LinkedIn" title="LinkedIn">in</a>
+    <a href="https://whatsapp.com/channel/0029Vb9Px9H2f3EELsdZdG2Y" target="_blank" rel="noopener" class="social-icon social-wa" aria-label="WhatsApp" title="Chaîne WhatsApp">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.35 5.07L2 22l5.07-1.32C8.53 21.5 10.22 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.62-1.28 1.18-1.77 1.24-.45.06-1.02.08-1.65-.1-.38-.11-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.07-1.42-1.07-2.7s.68-1.92.92-2.18c.24-.26.53-.32.7-.32l.5.01c.16.01.38-.06.6.45.22.53.75 1.83.82 1.96.07.13.11.29.02.47-.09.18-.14.29-.27.45-.13.16-.28.35-.4.47-.13.13-.27.27-.12.53.16.26.7 1.15 1.5 1.86 1.03.92 1.9 1.2 2.16 1.34.26.13.42.11.57-.07.16-.18.66-.77.83-1.03.18-.26.35-.22.6-.13.24.09 1.53.72 1.79.85.26.13.44.2.5.31.06.11.06.65-.16 1.27z"/></svg>
+    </a>
+    <a href="https://forms.gle/SzUAyUZCgj9gqtSo7" target="_blank" rel="noopener" class="social-icon social-form" aria-label="Donner votre avis" title="Aidez-nous à améliorer la plateforme">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 2h6a2 2 0 012 2v16a2 2 0 01-2 2H9a2 2 0 01-2-2V4a2 2 0 012-2z" stroke="currentColor" stroke-width="1.8"/><path d="M9 7h6M9 11h6M9 15h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </a>
+  </div>
+
+</header>
+
+<section class="page-shell">
+  <div class="acc-wrap">
+    <h1 style="font-size:22px; margin:0 0 6px;">Déclarer un accompagnement</h1>
+    <p class="lead" style="margin:0 0 18px;">Réservé aux membres de l'équipe et mentors — pour tracer les vrais accompagnements réalisés.</p>
+
+    <div class="acc-intro">
+      💡 Utilisez un <b>code anonyme</b> pour la personne aidée (jamais son vrai nom). Ajoutez une preuve si possible (capture d'écran de l'échange, confirmation) — elle reste privée, seule la coordination y a accès.
+    </div>
+
+    <form id="accForm" class="post-form">
+      <div class="field">
+        <label>Code de la personne aidée</label>
+        <input type="text" id="beneficiaireCode" placeholder="Ex : B01, ou une initiale" required>
+      </div>
+      <div class="field">
+        <label>Identité réelle <span class="opt-tag">privé, jamais affiché publiquement</span></label>
+        <input type="text" id="identiteReelle" placeholder="Nom complet + contact — pour preuve interne uniquement">
+        <p class="privacy-note">Sert uniquement à prouver, en interne, que ce n'est pas inventé si le jury demande à vérifier. Jamais visible sur le site, jamais publié dans le rapport — seul le code apparaît publiquement.</p>
+      </div>
+      <div class="field">
+        <label>Type d'accompagnement</label>
+        <select id="accType" required style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--line); font-family:Inter,sans-serif;">
+          <option value="">— Choisir —</option>
+          <option value="cv">CV relu / amélioré</option>
+          <option value="lettre">Lettre de motivation corrigée</option>
+          <option value="eligibilite">Éligibilité vérifiée</option>
+          <option value="candidature">Aide à la candidature</option>
+          <option value="mentorat">Séance de mentorat réalisée</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Détails (quoi, quand, pour quelle opportunité si applicable)</label>
+        <textarea id="accNotes" rows="3" placeholder="Ex : Relecture de CV le 18/08, pour la bourse UEMOA"></textarea>
+      </div>
+      <div class="field">
+        <label>Preuve (capture d'écran, optionnel mais recommandé)</label>
+        <input type="file" id="accProof" accept="image/png, image/jpeg, image/webp, application/pdf">
+        <span id="proofStatus" style="font-family:Inter,sans-serif; font-size:11.5px; color:var(--ink-soft); display:block; margin-top:6px;"></span>
+      </div>
+      <button class="btn" type="submit" style="width:100%; margin-top:8px;">Enregistrer cet accompagnement</button>
+      <div class="msg" id="accMsg"></div>
+    </form>
+
+    <div class="acc-list" id="myAccList"></div>
+  </div>
+</section>
+
+<script src="supabase-js.min.js"></script>
+<script src="supabaseClient.js"></script>
+<script>
+(async function () {
+  // Masque automatiquement toute deadline déjà passée dans le bandeau
+  document.querySelectorAll("[data-until]").forEach(el => {
+    const limite = new Date(el.getAttribute("data-until") + "T23:59:59");
+    if (new Date() > limite) el.remove();
+  });
+  try {
+    const elOpp = document.getElementById("flashOppCount");
+    if (elOpp) {
+      const { count } = await db.from("opportunities").select("*", { count: "exact", head: true });
+      if (count) elOpp.textContent = count + "+";
+    }
+  } catch (e) { /* silencieux, le texte par défaut reste affiché */ }
+  try {
+    const elMentor = document.getElementById("flashMentorCount");
+    if (elMentor) {
+      const { count } = await db.from("mentors").select("*", { count: "exact", head: true });
+      if (count) elMentor.textContent = count;
+    }
+  } catch (e) { /* silencieux */ }
+})();
+</script>
+<script>
+let currentUser = null;
+
+async function init() {
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) {
+    window.location.href = "auth.html";
+    return;
+  }
+  currentUser = session.user;
+  loadMyDeclarations();
+}
+
+function showMsg(el, text, ok) {
+  el.textContent = text;
+  el.className = "msg " + (ok ? "ok" : "error");
+}
+
+document.getElementById("accForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById("accMsg");
+  const proofStatus = document.getElementById("proofStatus");
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+
+  const code = document.getElementById("beneficiaireCode").value.trim();
+  const identiteReelle = document.getElementById("identiteReelle").value.trim();
+  const type = document.getElementById("accType").value;
+  const notes = document.getElementById("accNotes").value.trim();
+  const file = document.getElementById("accProof").files[0];
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Enregistrement...";
+
+  let preuveFichier = null;
+
+  if (file) {
+    if (file.size > 8 * 1024 * 1024) {
+      showMsg(msg, "Fichier trop lourd (max 8 Mo).", false);
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Enregistrer cet accompagnement";
+      return;
+    }
+    proofStatus.textContent = "Envoi de la preuve...";
+    const ext = file.name.split(".").pop();
+    const filePath = `${currentUser.id}/${Date.now()}.${ext}`;
+    const { error: uploadError } = await db.storage.from("preuves-accompagnement").upload(filePath, file);
+    if (uploadError) {
+      showMsg(msg, "Erreur upload preuve : " + uploadError.message, false);
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Enregistrer cet accompagnement";
+      return;
+    }
+    preuveFichier = filePath;
+    proofStatus.textContent = "✓ Preuve envoyée";
+  }
+
+  const { data: profile } = await db.from("profiles").select("prenom, nom").eq("id", currentUser.id).maybeSingle();
+  const membreLabel = [profile?.prenom, profile?.nom].filter(Boolean).join(" ") || currentUser.email;
+
+  const { error: insertError } = await db.from("accompagnements").insert({
+    beneficiaire_code: code,
+    identite_reelle: identiteReelle || null,
+    type,
+    mentor_ou_membre: membreLabel,
+    notes,
+    preuve_fichier: preuveFichier,
+  });
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Enregistrer cet accompagnement";
+
+  if (insertError) {
+    showMsg(msg, "Erreur : " + insertError.message, false);
+    return;
+  }
+
+  showMsg(msg, "✓ Accompagnement enregistré, merci !", true);
+  document.getElementById("accForm").reset();
+  proofStatus.textContent = "";
+  loadMyDeclarations();
+});
+
+async function loadMyDeclarations() {
+  const { data: profile } = await db.from("profiles").select("prenom, nom").eq("id", currentUser.id).maybeSingle();
+  const membreLabel = [profile?.prenom, profile?.nom].filter(Boolean).join(" ") || currentUser.email;
+
+  const { data } = await db.from("accompagnements")
+    .select("*")
+    .eq("mentor_ou_membre", membreLabel)
+    .order("created_at", { ascending: false })
+    .limit(10);
+
+  const zone = document.getElementById("myAccList");
+  if (!data || data.length === 0) {
+    zone.innerHTML = "";
+    return;
+  }
+
+  const typeLabels = { cv: "CV relu", lettre: "Lettre corrigée", eligibilite: "Éligibilité vérifiée", candidature: "Aide candidature", mentorat: "Mentorat" };
+
+  zone.innerHTML = `<h3 style="font-size:15px; margin:0 0 10px;">Vos dernières déclarations</h3>` +
+    data.map(a => `
+      <div class="acc-item">
+        <b>${a.beneficiaire_code}</b> — ${typeLabels[a.type] || a.type}
+        ${a.preuve_fichier ? " 📎" : ""}
+        <div class="meta">${new Date(a.created_at).toLocaleDateString("fr-FR")} ${a.notes ? "— " + a.notes : ""}</div>
+      </div>
+    `).join("");
+}
+
+init();
+</script>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const saved = sessionStorage.getItem("giveback-theme") || "light";
+  root.setAttribute("data-theme", saved);
+
+  const MOON_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const SUN_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("themeToggleBtn");
+    if (!btn) return;
+
+    function updateIcon() {
+      const current = root.getAttribute("data-theme") || "light";
+      // L'icône affichée représente le thème vers lequel on bascule en cliquant
+      btn.innerHTML = current === "light" ? MOON_SVG : SUN_SVG;
+      btn.setAttribute("aria-label", current === "light" ? "Passer au thème sombre" : "Passer au thème clair");
+    }
+    updateIcon();
+
+    btn.addEventListener("click", () => {
+      const current = root.getAttribute("data-theme") || "light";
+      const next = current === "light" ? "dark" : "light";
+      root.setAttribute("data-theme", next);
+      sessionStorage.setItem("giveback-theme", next);
+      updateIcon();
+    });
+  });
+})();
+</script>
+
+<footer class="site-footer">
+  <div class="wrap footer-top">
+    <div class="footer-brand-col">
+      <div class="footer-brand-name">AfricanYouth GiveBack</div>
+      <p class="footer-brand-tagline">AfricanYouth GiveBack est un projet réalisé par des étudiants du programme Mastercard Foundation Scholars à l'Institut 2iE, dans le cadre du Give Back Activity. La plateforme centralise des opportunités provenant de nombreuses institutions africaines et internationales, et propose un accompagnement par des mentors bénévoles.</p>
+    </div>
+    <div class="footer-nav-col">
+      <h4>Le site</h4>
+      <a href="index.html">Opportunités</a>
+      <a href="mentors.html">Mentors</a>
+      <a href="formations.html">Mini-formations</a>
+      <a href="communaute.html">Communauté</a>
+      <a href="tutoriel.html">Comment ça marche</a>
+    </div>
+    <div class="footer-nav-col">
+      <h4>Accéder à Giveback</h4>
+      <a href="espace.html">Accéder à mon espace</a>
+      <a href="auth.html">Se connecter</a>
+      <a href="feedback.html">Donner votre avis</a>
+    </div>
+  </div>
+  <div class="wrap footer-bottom-row">
+    <span>© 2026 AfricanYouth GiveBack. Tous droits réservés. — Give Back Activity, Mastercard Foundation × Institut 2iE.</span>
+    <a href="confidentialite.html">Politique de confidentialité</a>
+  </div>
+  <div class="partner-logos-marquee">
+    <div class="partner-logos-track">
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+    </div>
+  </div>
+  <div class="footer-marquee">
+    <span class="footer-marquee-track">Cette plateforme est développée par des étudiants boursiers de la Fondation Mastercard en formation à l'Institut International d'Ingénierie de l'Eau et de l'Environnement (2iE) — elle ne constitue pas un service officiel de l'Institut 2iE ni de la Fondation Mastercard.</span>
+  </div>
+</footer>
+
+</body>
+</html>

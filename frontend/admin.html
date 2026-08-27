@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AfricanYouth GiveBack — Administration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .admin-wrap{ max-width:1100px; margin:0 auto; padding:40px 24px 100px; }
+  .stat-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:16px; margin:24px 0 40px; }
+  .stat-card{ background:var(--forest); color:var(--on-dark); border-radius:12px; padding:20px; }
+  .stat-num{ font-size:32px; font-weight:700; font-family:Inter,sans-serif; line-height:1; margin-bottom:6px; }
+  .stat-label{ font-family:Inter,sans-serif; font-size:12px; color:#C7D3CE; }
+  .section-title{ font-size:19px; font-weight:500; margin:36px 0 14px; }
+  table{ width:100%; border-collapse:collapse; background:var(--paper-raised); border-radius:10px; overflow:hidden; }
+  th{ background:var(--forest-deep); color:var(--on-dark); font-family:Inter,sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:.04em; text-align:left; padding:10px 14px; }
+  td{ padding:10px 14px; border-top:1px solid var(--line); font-family:Inter,sans-serif; font-size:13px; }
+  tr:hover td{ background:var(--paper); }
+  .status-pill{ font-family:Inter,sans-serif; font-size:10.5px; padding:3px 9px; border-radius:999px; background:var(--gold-soft); color:var(--forest-deep); font-weight:600; }
+  .locked{ max-width:480px; margin:80px auto; text-align:center; }
+  .locked h1{ font-size:22px; }
+  .locked p{ font-family:Inter,sans-serif; color:var(--ink-soft); font-size:14px; }
+  .empty-row td{ text-align:center; color:var(--ink-soft); font-style:italic; }
+  .mentor-photos-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:16px; margin-bottom:40px; }
+  .mentor-photo-card{ background:var(--paper-raised); border-radius:12px; padding:16px; text-align:center; }
+  .mentor-photo-card img, .mentor-photo-card .avatar-placeholder{
+    width:72px; height:72px; border-radius:50%; object-fit:cover; margin:0 auto 10px; display:block;
+    background:var(--forest); color:#fff; display:flex; align-items:center; justify-content:center; font-family:Inter,sans-serif; font-weight:700;
+  }
+  .mentor-photo-card img{ display:block; }
+  .mentor-photo-card h4{ font-size:13px; margin:0 0 10px; font-weight:600; }
+  .mentor-photo-card label{
+    display:inline-block; cursor:pointer; background:var(--forest); color:#fff; font-family:Inter,sans-serif;
+    font-size:11px; font-weight:600; padding:7px 12px; border-radius:8px;
+  }
+  .mentor-photo-card .status{ display:block; margin-top:6px; font-family:Inter,sans-serif; font-size:10.5px; color:var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<div class="ambient-layer"><div class="wash"></div><div id="ambientParticles"></div></div>
+<div class="flash-infos">
+  <span class="flash-infos-label">⚡ Flash infos</span>
+  <div class="flash-infos-track">
+    <span id="flashInfosText"><span id="flashAccompagnement"></span><span id="flashDeadline1" data-until="2026-08-31">📌 Deadline UEMOA, MAINSTREAM et Bourses Mastercard/2iE : 30-31 août 2026 — ne ratez pas la date&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; </span>🎓 <span id="flashOppCount">28+</span> opportunités vérifiées disponibles sur la plateforme&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; 🤝 <span id="flashMentorCount">9</span> mentors disponibles pour vous accompagner gratuitement&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; <img src="logo-mastercard-foundation.png" class="flash-infos-logo" alt="Mastercard Foundation">Un projet mené par des étudiants boursiers de la Mastercard Foundation à <img src="logo-2ie-officiel.png" class="flash-infos-logo" alt="Institut 2iE">l'Institut 2iE&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; 📱 Retrouvez-nous sur Facebook, LinkedIn et notre chaîne WhatsApp</span>
+  </div>
+</div>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack" class="brand-mark">
+    <div class="brand-text">
+      <div class="brand-word">AfricanYouth GiveBack</div>
+      <div class="brand-tagline">Éducation, accès aux opportunités</div>
+    </div>
+  </a>
+  <button class="hamburger" aria-label="Menu">☰</button>
+  <nav class="sans">
+    <a href="index.html">Opportunités</a>
+    <a href="tutoriel.html">Comment ça marche</a>
+    <a href="espace.html">Mon espace</a>
+  </nav>
+<script>
+(function () {
+  const page = (location.pathname.split("/").pop() || "index.html").replace(/\.html$/, "");
+  document.querySelectorAll("nav.sans a[href]").forEach(a => {
+    const hrefPage = a.getAttribute("href").replace(/\.html$/, "");
+    if (hrefPage === page || (page === "" && hrefPage === "index")) a.classList.add("page-active");
+  });
+})();
+</script>
+  <div class="social-icons-header">
+    <a href="https://www.facebook.com/profile.php?id=61593783893327" target="_blank" rel="noopener" class="social-icon social-fb" aria-label="Facebook" title="Facebook">f</a>
+    <a href="https://www.linkedin.com/company/144639927" target="_blank" rel="noopener" class="social-icon social-li" aria-label="LinkedIn" title="LinkedIn">in</a>
+    <a href="https://whatsapp.com/channel/0029Vb9Px9H2f3EELsdZdG2Y" target="_blank" rel="noopener" class="social-icon social-wa" aria-label="WhatsApp" title="Chaîne WhatsApp">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.35 5.07L2 22l5.07-1.32C8.53 21.5 10.22 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.62-1.28 1.18-1.77 1.24-.45.06-1.02.08-1.65-.1-.38-.11-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.07-1.42-1.07-2.7s.68-1.92.92-2.18c.24-.26.53-.32.7-.32l.5.01c.16.01.38-.06.6.45.22.53.75 1.83.82 1.96.07.13.11.29.02.47-.09.18-.14.29-.27.45-.13.16-.28.35-.4.47-.13.13-.27.27-.12.53.16.26.7 1.15 1.5 1.86 1.03.92 1.9 1.2 2.16 1.34.26.13.42.11.57-.07.16-.18.66-.77.83-1.03.18-.26.35-.22.6-.13.24.09 1.53.72 1.79.85.26.13.44.2.5.31.06.11.06.65-.16 1.27z"/></svg>
+    </a>
+    <a href="https://forms.gle/SzUAyUZCgj9gqtSo7" target="_blank" rel="noopener" class="social-icon social-form" aria-label="Donner votre avis" title="Aidez-nous à améliorer la plateforme">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 2h6a2 2 0 012 2v16a2 2 0 01-2 2H9a2 2 0 01-2-2V4a2 2 0 012-2z" stroke="currentColor" stroke-width="1.8"/><path d="M9 7h6M9 11h6M9 15h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </a>
+  </div>
+
+</header>
+
+<div id="content">
+  <div class="admin-wrap">
+    <p class="sans" style="color:var(--ink-soft)">Vérification des droits d'accès…</p>
+  </div>
+</div>
+
+<script src="supabase-js.min.js"></script>
+<script src="supabaseClient.js"></script>
+<script>
+(async function () {
+  // Masque automatiquement toute deadline déjà passée dans le bandeau
+  document.querySelectorAll("[data-until]").forEach(el => {
+    const limite = new Date(el.getAttribute("data-until") + "T23:59:59");
+    if (new Date() > limite) el.remove();
+  });
+  try {
+    const elOpp = document.getElementById("flashOppCount");
+    if (elOpp) {
+      const { count } = await db.from("opportunities").select("*", { count: "exact", head: true });
+      if (count) elOpp.textContent = count + "+";
+    }
+  } catch (e) { /* silencieux, le texte par défaut reste affiché */ }
+  try {
+    const elMentor = document.getElementById("flashMentorCount");
+    if (elMentor) {
+      const { count } = await db.from("mentors").select("*", { count: "exact", head: true });
+      if (count) elMentor.textContent = count;
+    }
+  } catch (e) { /* silencieux */ }
+})();
+</script>
+<script>
+async function init() {
+  const content = document.getElementById("content");
+  const { data: { session } } = await db.auth.getSession();
+
+  if (!session) {
+    content.innerHTML = `
+      <div class="locked">
+        <h1>Accès administrateur</h1>
+        <p>Connecte-toi avec un compte administrateur pour voir le tableau de bord.</p>
+        <a class="btn" href="auth.html" style="display:inline-block; margin-top:16px; text-decoration:none;">Se connecter</a>
+      </div>`;
+    return;
+  }
+
+  const { data: adminRow } = await db.from("admins").select("user_id").eq("user_id", session.user.id).maybeSingle();
+  if (!adminRow) {
+    content.innerHTML = `
+      <div class="locked">
+        <h1>Accès réservé</h1>
+        <p>Ce compte n'a pas les droits administrateur. Si tu penses que c'est une erreur, vérifie la table "admins" dans Supabase.</p>
+      </div>`;
+    return;
+  }
+
+  // Compteurs
+  const [profiles, opportunitiesTypes, applications, mentors, mentorRequests, posts,
+         modeleCentrale, modeleEmih, cvGeneres, lettresGenerees, accompagnementsData, entretiensCount] = await Promise.all([
+    db.from("profiles").select("*", { count: "exact", head: true }),
+    db.from("opportunities").select("type"),
+    db.from("applications").select("*", { count: "exact", head: true }),
+    db.from("mentors").select("*", { count: "exact", head: true }),
+    db.from("mentor_requests").select("*", { count: "exact", head: true }),
+    db.from("posts").select("*", { count: "exact", head: true }),
+    db.from("outils_usage").select("*", { count: "exact", head: true }).eq("type", "modele_centrale_2ie"),
+    db.from("outils_usage").select("*", { count: "exact", head: true }).eq("type", "modele_emih_eree_bgis"),
+    db.from("outils_usage").select("*", { count: "exact", head: true }).eq("type", "cv_genere"),
+    db.from("outils_usage").select("*", { count: "exact", head: true }).eq("type", "lettre_generee"),
+    db.from("accompagnements").select("beneficiaire_code"),
+    db.from("entretiens").select("*", { count: "exact", head: true }),
+  ]);
+
+  // Nombre de personnes DIFFÉRENTES réellement accompagnées (déclarations vérifiées par l'équipe)
+  const personnesAccompagnees = new Set((accompagnementsData.data || []).map(a => a.beneficiaire_code).filter(Boolean)).size;
+
+  // Répartition des opportunités par type (Bourse, Stage, Emploi, Concours, Formation...)
+  const typesListe = (opportunitiesTypes.data || []).map(o => o.type || "Non précisé");
+  const totalOpportunites = typesListe.length;
+  const repartitionTypes = {};
+  typesListe.forEach(t => { repartitionTypes[t] = (repartitionTypes[t] || 0) + 1; });
+  const typesHtml = Object.entries(repartitionTypes)
+    .sort((a, b) => b[1] - a[1])
+    .map(([type, nb]) => `<div class="stat-card"><div class="stat-num">${nb}</div><div class="stat-label">${type}</div></div>`)
+    .join("");
+
+  content.innerHTML = `
+    <div class="admin-wrap">
+      <h1 style="font-size:26px; font-weight:500; margin:0 0 4px;">Tableau de bord</h1>
+      <p class="sans" style="color:var(--ink-soft); margin:0 0 10px; font-size:13.5px;">Vue d'ensemble de l'activité sur la plateforme.</p>
+
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num">${profiles.count ?? 0}</div><div class="stat-label">Inscrits</div></div>
+        <div class="stat-card"><div class="stat-num">${totalOpportunites}</div><div class="stat-label">Opportunités (total)</div></div>
+        <div class="stat-card"><div class="stat-num">${applications.count ?? 0}</div><div class="stat-label">Ajoutées à un suivi</div></div>
+        <div class="stat-card" style="background:var(--forest); color:#fff; border:3px solid var(--gold);"><div class="stat-num">${personnesAccompagnees}</div><div class="stat-label" style="color:#fff;">🤝 Personnes réellement accompagnées</div></div>
+        <div class="stat-card"><div class="stat-num">${mentors.count ?? 0}</div><div class="stat-label">Mentors</div></div>
+        <div class="stat-card"><div class="stat-num">${mentorRequests.count ?? 0}</div><div class="stat-label">Demandes mentorat</div></div>
+        <div class="stat-card"><div class="stat-num">${posts.count ?? 0}</div><div class="stat-label">Publications</div></div>
+        <div class="stat-card" style="background:var(--forest-deep); color:#fff;"><div class="stat-num">${entretiensCount.count ?? 0}</div><div class="stat-label" style="color:#fff;">🎤 Entretiens réalisés (Give Back Activity)</div></div>
+      </div>
+
+      <div class="section-title">Répartition des opportunités par type</div>
+      <div class="stat-grid">
+        ${typesHtml || `<div class="stat-card"><div class="stat-num">0</div><div class="stat-label">Aucune opportunité</div></div>`}
+      </div>
+      <p class="sans" style="color:var(--ink-soft); margin:10px 0 20px; font-size:11.5px; font-style:italic;">"Ajoutées à un suivi" = intérêt marqué sur la plateforme. "Personnes réellement accompagnées" = confirmé par nos déclarations d'accompagnement terrain, notre vraie mesure d'impact.</p>
+
+      <div class="section-title">Diagnostic terrain (formulaire Google)</div>
+      <div class="stat-grid">
+        <div class="stat-card" style="background:var(--forest-deep); color:#fff;"><div class="stat-num" id="statGoogleFormCount">…</div><div class="stat-label" style="color:#fff;">📋 Réponses reçues</div></div>
+        <a href="#" id="linkGoogleForm" target="_blank" rel="noopener" class="stat-card" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-decoration:none; background:var(--paper-raised); border:1.5px solid var(--forest);">
+          <div style="font-size:22px;">🔗</div>
+          <div class="stat-label" style="color:var(--forest); font-weight:700;">Voir les réponses</div>
+        </a>
+      </div>
+
+      <div class="section-title">Outils CV & lettre de motivation</div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num">${modeleCentrale.count ?? 0}</div><div class="stat-label">Modèle Centrale-2iE téléchargé</div></div>
+        <div class="stat-card"><div class="stat-num">${modeleEmih.count ?? 0}</div><div class="stat-label">Modèle EMIH/EREE/BGIS téléchargé</div></div>
+        <div class="stat-card"><div class="stat-num">${cvGeneres.count ?? 0}</div><div class="stat-label">CV générés sur la plateforme</div></div>
+        <div class="stat-card"><div class="stat-num">${lettresGenerees.count ?? 0}</div><div class="stat-label">Lettres générées sur la plateforme</div></div>
+      </div>
+
+      <div class="section-title">Profils vulnérables (statistiques globales, jamais nominatives)</div>
+      <div class="stat-grid" id="vulnStats">
+        <div class="stat-card"><div class="stat-num">…</div><div class="stat-label">Situation de handicap</div></div>
+        <div class="stat-card"><div class="stat-num">…</div><div class="stat-label">Orphelins</div></div>
+        <div class="stat-card"><div class="stat-num">…</div><div class="stat-label">Famille modeste</div></div>
+      </div>
+
+      <div class="section-title">Derniers inscrits</div>
+      <p class="sans" style="font-size:11px; color:var(--ink-soft); margin:-8px 0 10px;">Par transparence envers les utilisateurs, la situation individuelle (handicap/orphelin/famille modeste) et la date de naissance ne sont pas affichées ici — seulement des statistiques globales ci-dessus.</p>
+      <table><thead><tr><th>Prénom</th><th>Statut</th><th>Ville</th><th>Pays</th><th>WhatsApp</th><th>Inscrit le</th></tr></thead>
+        <tbody id="tblProfiles"><tr class="empty-row"><td colspan="6">Chargement…</td></tr></tbody></table>
+
+      <div class="section-title">Dernières candidatures (statut réel : En cours = suivi seulement, Déposée = confirmé par l'utilisateur)</div>
+      <table><thead><tr><th>Utilisateur</th><th>Opportunité</th><th>Statut</th><th>Date</th></tr></thead>
+        <tbody id="tblApplications"><tr class="empty-row"><td colspan="4">Chargement…</td></tr></tbody></table>
+
+      <div class="section-title">Dernières demandes de mentorat</div>
+      <table><thead><tr><th>Utilisateur</th><th>Email</th><th>Mentor</th><th>Statut</th><th>Date</th></tr></thead>
+        <tbody id="tblMentorRequests"><tr class="empty-row"><td colspan="5">Chargement…</td></tr></tbody></table>
+
+      <div class="section-title">Dernières publications</div>
+      <table><thead><tr><th>Auteur</th><th>Message</th><th>Date</th></tr></thead>
+        <tbody id="tblPosts"><tr class="empty-row"><td colspan="3">Chargement…</td></tr></tbody></table>
+
+      <div class="section-title">Mini-formations les plus aimées</div>
+      <table><thead><tr><th>Titre</th><th>Catégorie</th><th>❤️ Likes</th><th>💬 Commentaires</th></tr></thead>
+        <tbody id="tblFormations"><tr class="empty-row"><td colspan="4">Chargement…</td></tr></tbody></table>
+
+      <div class="section-title">Retours des testeurs (preuve terrain)</div>
+      <table><thead><tr><th>Nom</th><th>Facilité</th><th>Pertinence</th><th>Fonctionnalité utile</th><th>Recommande</th><th>Date</th></tr></thead>
+        <tbody id="tblFeedbacks"><tr class="empty-row"><td colspan="6">Chargement…</td></tr></tbody></table>
+
+      <div class="section-title">Photos des mentors</div>
+      <p class="sans" style="color:var(--ink-soft); margin:-6px 0 16px; font-size:12px;">Cliquez sur "Choisir une photo" pour chaque mentor. La photo apparaît immédiatement sur sa fiche publique.</p>
+      <div id="mentorPhotosGrid" class="mentor-photos-grid"></div>
+
+      <div class="section-title">Nombre d'entretiens terrain réalisés dans le cadre du Give Back Activity</div>
+      <table><thead><tr><th>Enquêteur</th><th>Code</th><th>Pays</th><th>Réponses</th><th>Preuve</th><th>Date</th></tr></thead>
+        <tbody id="tblEntretiens"><tr class="empty-row"><td colspan="6">Chargement…</td></tr></tbody></table>
+
+      <div class="section-title">Accompagnements déclarés</div>
+      <table><thead><tr><th>Membre</th><th>Code</th><th>Type</th><th>Notes</th><th>Preuve</th><th>Date</th></tr></thead>
+        <tbody id="tblAccompagnements"><tr class="empty-row"><td colspan="6">Chargement…</td></tr></tbody></table>
+    </div>
+  `;
+
+  loadProfiles();
+  loadVulnStats();
+  loadApplications();
+  loadMentorRequests();
+  loadPosts();
+  loadFormations();
+  loadFeedbacks();
+  loadMentorPhotos();
+  loadEntretiens();
+  loadGoogleFormCount();
+  loadAccompagnements();
+}
+
+async function loadProfiles() {
+  const { data } = await db.from("profiles").select("prenom, statut, ville, pays, whatsapp, created_at").order("created_at", { ascending: false }).limit(15);
+  const tbl = document.getElementById("tblProfiles");
+  if (!data || data.length === 0) { tbl.innerHTML = `<tr class="empty-row"><td colspan="6">Aucun inscrit pour le moment.</td></tr>`; return; }
+  tbl.innerHTML = data.map(p => `
+    <tr>
+      <td>${p.prenom || "—"}</td>
+      <td>${p.statut || "—"}</td>
+      <td>${p.ville || "—"}</td>
+      <td>${p.pays || "—"}</td>
+      <td>${p.whatsapp ? `<a href="https://wa.me/${p.whatsapp}" target="_blank" rel="noopener" style="color:var(--forest); text-decoration:none;">💬 ${p.whatsapp}</a>` : "—"}</td>
+      <td>${p.created_at ? new Date(p.created_at).toLocaleDateString("fr-FR") : "—"}</td>
+    </tr>
+  `).join("");
+}
+
+async function loadVulnStats() {
+  const [handicap, orphelin, familleModeste] = await Promise.all([
+    db.from("profiles").select("*", { count: "exact", head: true }).contains("tags", ["handicap"]),
+    db.from("profiles").select("*", { count: "exact", head: true }).contains("tags", ["orphelin"]),
+    db.from("profiles").select("*", { count: "exact", head: true }).contains("tags", ["famille-modeste"]),
+  ]);
+  const el = document.getElementById("vulnStats");
+  el.innerHTML = `
+    <div class="stat-card"><div class="stat-num">${handicap.count ?? 0}</div><div class="stat-label">Situation de handicap</div></div>
+    <div class="stat-card"><div class="stat-num">${orphelin.count ?? 0}</div><div class="stat-label">Orphelins</div></div>
+    <div class="stat-card"><div class="stat-num">${familleModeste.count ?? 0}</div><div class="stat-label">Famille modeste</div></div>
+  `;
+}
+
+let profilesMap = {};
+let profilesEmailMap = {};
+
+async function loadProfilesMap() {
+  const { data } = await db.from("profiles").select("id, prenom, email");
+  profilesMap = {};
+  profilesEmailMap = {};
+  (data || []).forEach(p => { profilesMap[p.id] = p.prenom; profilesEmailMap[p.id] = p.email; });
+}
+
+async function loadApplications() {
+  await loadProfilesMap();
+  const { data } = await db
+    .from("applications")
+    .select("user_id, status, created_at, opportunities(title)")
+    .order("created_at", { ascending: false }).limit(15);
+  const tbl = document.getElementById("tblApplications");
+  if (!data || data.length === 0) { tbl.innerHTML = `<tr class="empty-row"><td colspan="4">Aucune candidature pour le moment.</td></tr>`; return; }
+  tbl.innerHTML = data.map(a => `
+    <tr>
+      <td>${profilesMap[a.user_id] || "—"}</td>
+      <td>${a.opportunities?.title || "—"}</td>
+      <td><span class="status-pill" style="${a.status === 'Déposée' ? 'background:var(--forest); color:var(--on-dark);' : ''}">${a.status || "—"}</span></td>
+      <td>${new Date(a.created_at).toLocaleDateString("fr-FR")}</td>
+    </tr>
+  `).join("");
+}
+
+async function loadMentorRequests() {
+  if (Object.keys(profilesMap).length === 0) await loadProfilesMap();
+  const { data } = await db
+    .from("mentor_requests")
+    .select("user_id, status, created_at, mentors(nom)")
+    .order("created_at", { ascending: false }).limit(40);
+  const tbl = document.getElementById("tblMentorRequests");
+  if (!data || data.length === 0) { tbl.innerHTML = `<tr class="empty-row"><td colspan="5">Aucune demande pour le moment.</td></tr>`; return; }
+  tbl.innerHTML = data.map(m => `
+    <tr>
+      <td>${profilesMap[m.user_id] || "—"}</td>
+      <td>${profilesEmailMap[m.user_id] ? `<a href="mailto:${profilesEmailMap[m.user_id]}">${profilesEmailMap[m.user_id]}</a>` : "—"}</td>
+      <td>${m.mentors?.nom || "—"}</td>
+      <td><span class="status-pill">${m.status || "—"}</span></td>
+      <td>${new Date(m.created_at).toLocaleDateString("fr-FR")}</td>
+    </tr>
+  `).join("");
+}
+
+async function loadPosts() {
+  const { data } = await db.from("posts").select("*").order("created_at", { ascending: false }).limit(15);
+  const tbl = document.getElementById("tblPosts");
+  if (!data || data.length === 0) { tbl.innerHTML = `<tr class="empty-row"><td colspan="3">Aucune publication pour le moment.</td></tr>`; return; }
+  tbl.innerHTML = data.map(p => `
+    <tr><td>${p.auteur_prenom || "—"}</td><td>${(p.contenu || "").slice(0, 80)}${p.contenu && p.contenu.length > 80 ? "…" : ""}</td><td>${new Date(p.created_at).toLocaleDateString("fr-FR")}</td></tr>
+  `).join("");
+}
+
+async function loadFormations() {
+  const { data: formations } = await db.from("formations").select("id, titre, categorie");
+  const tbl = document.getElementById("tblFormations");
+  if (!formations || formations.length === 0) {
+    tbl.innerHTML = `<tr class="empty-row"><td colspan="4">Aucune formation pour le moment.</td></tr>`;
+    return;
+  }
+
+  const rows = await Promise.all(formations.map(async f => {
+    const { count: likes } = await db.from("formation_likes").select("*", { count: "exact", head: true }).eq("formation_id", f.id);
+    const { count: comments } = await db.from("formation_comments").select("*", { count: "exact", head: true }).eq("formation_id", f.id);
+    return { ...f, likes: likes || 0, comments: comments || 0 };
+  }));
+
+  rows.sort((a, b) => b.likes - a.likes);
+
+  tbl.innerHTML = rows.map(f => `
+    <tr><td>${f.titre}</td><td>${f.categorie || "—"}</td><td>${f.likes}</td><td>${f.comments}</td></tr>
+  `).join("");
+}
+
+async function loadFeedbacks() {
+  const { data } = await db.from("feedbacks").select("*").order("created_at", { ascending: false });
+  const tbl = document.getElementById("tblFeedbacks");
+  if (!data || data.length === 0) {
+    tbl.innerHTML = `<tr class="empty-row"><td colspan="6">Aucun retour pour le moment.</td></tr>`;
+    return;
+  }
+  tbl.innerHTML = data.map(f => `
+    <tr>
+      <td>${f.auteur_prenom || "—"}</td>
+      <td>${f.note_facilite ? f.note_facilite + "/5" : "—"}</td>
+      <td>${f.opportunites_pertinentes || "—"}</td>
+      <td>${f.fonctionnalite_utile || "—"}</td>
+      <td>${f.recommande === true ? "✓ Oui" : f.recommande === false ? "✗ Non" : "—"}</td>
+      <td>${new Date(f.created_at).toLocaleDateString("fr-FR")}</td>
+    </tr>
+  `).join("");
+}
+
+init();
+</script>
+<script>
+(function(){
+  const zone = document.getElementById("ambientParticles");
+  if (!zone) return;
+  const n = 10;
+  for (let i = 0; i < n; i++) {
+    const dot = document.createElement("span");
+    dot.className = "dot";
+    const size = 3 + Math.random() * 4;
+    dot.style.width = size + "px";
+    dot.style.height = size + "px";
+    dot.style.left = Math.random() * 100 + "%";
+    dot.style.animationDuration = (14 + Math.random() * 12) + "s";
+    dot.style.animationDelay = (Math.random() * 14) + "s";
+    zone.appendChild(dot);
+  }
+})();
+</script>
+<script>
+document.querySelectorAll(".hamburger").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const nav = btn.closest("header").querySelector("nav.sans");
+    if (nav) nav.classList.toggle("open");
+  });
+});
+</script>
+<script>
+async function loadMentorPhotos() {
+  const grid = document.getElementById("mentorPhotosGrid");
+  if (!grid) return;
+  const { data: mentorsList } = await db.from("mentors").select("id, nom, photo_url").order("nom");
+  if (!mentorsList || mentorsList.length === 0) {
+    grid.innerHTML = `<p class="sans" style="color:var(--ink-soft);">Aucun mentor pour le moment.</p>`;
+    return;
+  }
+
+  grid.innerHTML = mentorsList.map(m => {
+    const initials = (m.nom || "?").split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
+    const imgHtml = m.photo_url
+      ? `<img src="${m.photo_url}" alt="${m.nom}" id="mentorImg-${m.id}">`
+      : `<div class="avatar-placeholder" id="mentorImg-${m.id}">${initials}</div>`;
+    return `
+      <div class="mentor-photo-card">
+        ${imgHtml}
+        <h4>${m.nom}</h4>
+        <label for="mentorFile-${m.id}">📷 Choisir une photo</label>
+        <input type="file" id="mentorFile-${m.id}" accept="image/png, image/jpeg, image/webp" style="display:none;" data-mentor-id="${m.id}">
+        <span class="status" id="mentorStatus-${m.id}"></span>
+      </div>
+    `;
+  }).join("");
+
+  grid.querySelectorAll('input[type="file"]').forEach(input => {
+    input.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const mentorId = e.target.dataset.mentorId;
+      const statusEl = document.getElementById(`mentorStatus-${mentorId}`);
+
+      if (file.size > 5 * 1024 * 1024) {
+        statusEl.textContent = "Image trop lourde (max 5 Mo).";
+        return;
+      }
+
+      statusEl.textContent = "Envoi en cours...";
+      const ext = file.name.split(".").pop();
+      const filePath = `mentors/${mentorId}-${Date.now()}.${ext}`;
+
+      const { error: uploadError } = await db.storage.from("photos-profil").upload(filePath, file, { upsert: true });
+      if (uploadError) {
+        statusEl.textContent = "Erreur : " + uploadError.message;
+        return;
+      }
+
+      const { data: publicUrlData } = db.storage.from("photos-profil").getPublicUrl(filePath);
+      const { error: updateError } = await db.from("mentors").update({ photo_url: publicUrlData.publicUrl }).eq("id", mentorId);
+      if (updateError) {
+        statusEl.textContent = "Erreur sauvegarde : " + updateError.message;
+        return;
+      }
+
+      const imgEl = document.getElementById(`mentorImg-${mentorId}`);
+      imgEl.outerHTML = `<img src="${publicUrlData.publicUrl}" alt="" id="mentorImg-${mentorId}">`;
+      statusEl.textContent = "✓ Photo mise à jour";
+    });
+  });
+}
+async function loadGoogleFormCount() {
+  const el = document.getElementById("statGoogleFormCount");
+  const linkEl = document.getElementById("linkGoogleForm");
+  if (linkEl) linkEl.href = "https://docs.google.com/forms/d/1p5EqQx34_2y4TeOToxjSI-RtOEmkwH_EjvOyorxqplY/edit#responses";
+  try {
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRbX9pRp-5cLkakxwLC_i6oEZ1rKhK738dRKut-cggXH8U-Pm2PgOSNkiQEgNl8G3fpp3jOFqp2mHbH/pub?gid=288717905&single=true&output=csv";
+    const res = await fetch(csvUrl);
+    const text = await res.text();
+    // Compte les lignes non vides, moins 1 pour l'en-tête
+    // Comptage correct : on ne compte une "vraie" nouvelle ligne que si on n'est
+    // pas actuellement à l'intérieur d'un champ entre guillemets — sinon, les
+    // réponses longues avec des retours à la ligne (texte libre) fausseraient le compte.
+    let nbLignes = 1; // la ligne d'en-tête compte pour 1
+    let dansGuillemets = false;
+    for (let i = 0; i < text.length; i++) {
+      const car = text[i];
+      if (car === '"') dansGuillemets = !dansGuillemets;
+      if (car === "\n" && !dansGuillemets) nbLignes++;
+    }
+    const nbReponses = Math.max(0, nbLignes - 1);
+    if (el) el.textContent = nbReponses;
+  } catch (e) {
+    if (el) el.textContent = "?";
+  }
+}
+
+async function loadEntretiens() {
+  const tbody = document.getElementById("tblEntretiens");
+  if (!tbody) return;
+  const { data } = await db.from("entretiens")
+    .select("interviewer, interviewee_code, pays, reponses, type_preuve, preuve_fichier, created_at")
+    .order("created_at", { ascending: false });
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Aucun entretien déclaré pour le moment.</td></tr>`;
+    return;
+  }
+
+  const rows = await Promise.all(data.map(async e => {
+    let preuveHtml = "—";
+    if (e.preuve_fichier) {
+      const { data: signed } = await db.storage.from("preuves-entretiens").createSignedUrl(e.preuve_fichier, 3600);
+      preuveHtml = signed?.signedUrl
+        ? `<a href="${signed.signedUrl}" target="_blank" rel="noopener">📎 Voir</a>`
+        : "📎 (lien indisponible)";
+    } else if (e.type_preuve) {
+      preuveHtml = e.type_preuve.replace("_", " ");
+    }
+    return `<tr>
+      <td>${e.interviewer}</td>
+      <td>${e.interviewee_code}</td>
+      <td>${e.pays || "—"}</td>
+      <td style="max-width:280px;">${e.reponses}</td>
+      <td>${preuveHtml}</td>
+      <td>${new Date(e.created_at).toLocaleDateString("fr-FR")}</td>
+    </tr>`;
+  }));
+
+  tbody.innerHTML = rows.join("");
+}
+
+async function loadAccompagnements() {
+  const tbody = document.getElementById("tblAccompagnements");
+  if (!tbody) return;
+  const { data } = await db.from("accompagnements")
+    .select("mentor_ou_membre, beneficiaire_code, type, notes, preuve_fichier, created_at")
+    .order("created_at", { ascending: false });
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Aucun accompagnement déclaré pour le moment.</td></tr>`;
+    return;
+  }
+
+  const typeLabels = { cv: "CV relu", lettre: "Lettre corrigée", eligibilite: "Éligibilité vérifiée", candidature: "Aide candidature", mentorat: "Mentorat" };
+
+  const rows = await Promise.all(data.map(async a => {
+    let preuveHtml = "—";
+    if (a.preuve_fichier) {
+      const { data: signed } = await db.storage.from("preuves-accompagnement").createSignedUrl(a.preuve_fichier, 3600);
+      preuveHtml = signed?.signedUrl
+        ? `<a href="${signed.signedUrl}" target="_blank" rel="noopener">📎 Voir</a>`
+        : "📎 (lien indisponible)";
+    }
+    return `<tr>
+      <td>${a.mentor_ou_membre}</td>
+      <td>${a.beneficiaire_code}</td>
+      <td>${typeLabels[a.type] || a.type}</td>
+      <td style="max-width:220px;">${a.notes || "—"}</td>
+      <td>${preuveHtml}</td>
+      <td>${new Date(a.created_at).toLocaleDateString("fr-FR")}</td>
+    </tr>`;
+  }));
+
+  tbody.innerHTML = rows.join("");
+}
+</script>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const saved = sessionStorage.getItem("giveback-theme") || "light";
+  root.setAttribute("data-theme", saved);
+
+  const MOON_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const SUN_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("themeToggleBtn");
+    if (!btn) return;
+
+    function updateIcon() {
+      const current = root.getAttribute("data-theme") || "light";
+      // L'icône affichée représente le thème vers lequel on bascule en cliquant
+      btn.innerHTML = current === "light" ? MOON_SVG : SUN_SVG;
+      btn.setAttribute("aria-label", current === "light" ? "Passer au thème sombre" : "Passer au thème clair");
+    }
+    updateIcon();
+
+    btn.addEventListener("click", () => {
+      const current = root.getAttribute("data-theme") || "light";
+      const next = current === "light" ? "dark" : "light";
+      root.setAttribute("data-theme", next);
+      sessionStorage.setItem("giveback-theme", next);
+      updateIcon();
+    });
+  });
+})();
+</script>
+
+<footer class="site-footer">
+  <div class="wrap footer-top">
+    <div class="footer-brand-col">
+      <div class="footer-brand-name">AfricanYouth GiveBack</div>
+      <p class="footer-brand-tagline">AfricanYouth GiveBack est un projet réalisé par des étudiants du programme Mastercard Foundation Scholars à l'Institut 2iE, dans le cadre du Give Back Activity. La plateforme centralise des opportunités provenant de nombreuses institutions africaines et internationales, et propose un accompagnement par des mentors bénévoles.</p>
+    </div>
+    <div class="footer-nav-col">
+      <h4>Le site</h4>
+      <a href="index.html">Opportunités</a>
+      <a href="mentors.html">Mentors</a>
+      <a href="formations.html">Mini-formations</a>
+      <a href="communaute.html">Communauté</a>
+      <a href="tutoriel.html">Comment ça marche</a>
+    </div>
+    <div class="footer-nav-col">
+      <h4>Accéder à Giveback</h4>
+      <a href="espace.html">Accéder à mon espace</a>
+      <a href="auth.html">Se connecter</a>
+      <a href="feedback.html">Donner votre avis</a>
+    </div>
+  </div>
+  <div class="wrap footer-bottom-row">
+    <span>© 2026 AfricanYouth GiveBack. Tous droits réservés. — Give Back Activity, Mastercard Foundation × Institut 2iE.</span>
+    <a href="confidentialite.html">Politique de confidentialité</a>
+  </div>
+  <div class="partner-logos-marquee">
+    <div class="partner-logos-track">
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+    </div>
+  </div>
+  <div class="footer-marquee">
+    <span class="footer-marquee-track">Cette plateforme est développée par des étudiants boursiers de la Fondation Mastercard en formation à l'Institut International d'Ingénierie de l'Eau et de l'Environnement (2iE) — elle ne constitue pas un service officiel de l'Institut 2iE ni de la Fondation Mastercard.</span>
+  </div>
+</footer>
+
+</body>
+</html>

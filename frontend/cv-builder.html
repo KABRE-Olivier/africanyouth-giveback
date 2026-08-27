@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AfricanYouth GiveBack — Mon CV & ma lettre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="supabase-js.min.js"></script>
+<script src="supabaseClient.js"></script>
+<script>
+(async function () {
+  // Masque automatiquement toute deadline déjà passée dans le bandeau
+  document.querySelectorAll("[data-until]").forEach(el => {
+    const limite = new Date(el.getAttribute("data-until") + "T23:59:59");
+    if (new Date() > limite) el.remove();
+  });
+  try {
+    const elOpp = document.getElementById("flashOppCount");
+    if (elOpp) {
+      const { count } = await db.from("opportunities").select("*", { count: "exact", head: true });
+      if (count) elOpp.textContent = count + "+";
+    }
+  } catch (e) { /* silencieux, le texte par défaut reste affiché */ }
+  try {
+    const elMentor = document.getElementById("flashMentorCount");
+    if (elMentor) {
+      const { count } = await db.from("mentors").select("*", { count: "exact", head: true });
+      if (count) elMentor.textContent = count;
+    }
+  } catch (e) { /* silencieux */ }
+})();
+</script>
+<style>
+  .modeles-box{ background:var(--paper-raised); border:1.5px solid var(--gold-soft); border-radius:14px; padding:20px 22px; margin:0 0 28px; }
+  .modeles-box .btn{ background:var(--forest); color:#fff; padding:10px 16px; border-radius:8px; font-family:Inter,sans-serif; font-weight:600; font-size:13px; }
+  .tool-layout{ display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start; }
+  @media (max-width:900px){ .tool-layout{ grid-template-columns:1fr; } }
+  .form-panel{ background:var(--paper-raised); border:1px solid var(--line); border-radius:14px; padding:22px; }
+  .form-panel h3{ font-size:15px; margin:22px 0 10px; }
+  .form-panel h3:first-of-type{ margin-top:0; }
+  .mini-field{ margin-bottom:12px; }
+  .mini-field label{ display:block; font-family:Inter,sans-serif; font-size:11.5px; font-weight:600; margin-bottom:5px; color:var(--ink-soft); }
+  .mini-field input, .mini-field textarea{
+    width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:7px;
+    font-size:13px; font-family:inherit; background:var(--paper); outline:none;
+  }
+  .mini-field textarea{ resize:vertical; min-height:60px; }
+  .repeat-block{ border:1px dashed var(--line); border-radius:10px; padding:12px; margin-bottom:10px; position:relative; }
+  .repeat-block button.remove{ position:absolute; top:8px; right:8px; background:none; border:none; color:var(--danger); font-size:11px; font-family:Inter,sans-serif; }
+  .add-btn{ background:none; border:1.5px dashed var(--forest); color:var(--forest); border-radius:8px; padding:8px 14px; font-family:Inter,sans-serif; font-size:12px; font-weight:600; width:100%; }
+
+  .cv-preview{ background:#fff; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,.08); padding:36px; position:sticky; top:20px; max-height:85vh; overflow-y:auto; }
+  .cv-header{ display:flex; gap:18px; align-items:center; border-bottom:3px solid var(--forest); padding-bottom:16px; margin-bottom:18px; }
+  .cv-photo{ width:80px; height:80px; border-radius:50%; object-fit:cover; background:var(--line); flex:none; }
+  .cv-name{ font-family:"Fraunces",Georgia,serif; font-size:25px; font-weight:700; color:var(--forest-deep); margin:0; }
+  .cv-titre{ font-family:Inter,sans-serif; font-size:13px; color:var(--gold); font-weight:700; text-transform:uppercase; letter-spacing:.04em; margin:2px 0 6px; }
+  .cv-contact{ font-family:Inter,sans-serif; font-size:11.5px; color:var(--ink-soft); }
+  .cv-section-title{ font-family:Inter,sans-serif; font-size:11.5px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--forest); border-bottom:1px solid var(--line); padding-bottom:4px; margin:18px 0 10px; }
+  .cv-item{ margin-bottom:10px; }
+  .cv-item-title{ font-weight:700; font-size:13px; }
+  .cv-item-sub{ font-family:Inter,sans-serif; font-size:11.5px; color:var(--ink-soft); }
+  .cv-item-desc{ font-family:Inter,sans-serif; font-size:12px; margin-top:3px; }
+  .cv-tags{ display:flex; flex-wrap:wrap; gap:6px; }
+  .cv-tag{ background:var(--paper); font-family:Inter,sans-serif; font-size:11px; padding:4px 9px; border-radius:6px; }
+
+  .lettre-preview{ background:#fff; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,.08); padding:40px; font-family:Georgia,serif; font-size:13.5px; line-height:1.7; color:#222; position:sticky; top:20px; max-height:85vh; overflow-y:auto; white-space:pre-wrap; }
+  .doc-credit{
+    margin-top:28px; padding-top:10px; border-top:1px solid #eee;
+    font-family:Inter,sans-serif; font-size:9px; color:#aaa; text-align:center;
+  }
+
+  @media print{
+    header, .form-panel, .tabs, h1, p.lead, .search-bar, .filters, .assistant-fab, .assistant-panel,
+    .site-footer, .modeles-box, .hamburger, .flash-infos, .theme-toggle-btn, .notif-bell, .notif-panel,
+    .partner-logos-marquee, .footer-marquee, .ambient-layer{ display:none !important; }
+    .page-shell{ background:#fff !important; padding:0 !important; }
+    .tool-layout{ display:block; }
+    .cv-preview, .lettre-preview{ box-shadow:none; position:static; max-height:none; }
+    body{ background:#fff; }
+  }
+</style>
+</head>
+<body>
+<div class="ambient-layer"><div class="wash"></div><div id="ambientParticles"></div></div>
+<div class="flash-infos">
+  <span class="flash-infos-label">⚡ Flash infos</span>
+  <div class="flash-infos-track">
+    <span id="flashInfosText"><span id="flashAccompagnement"></span><span id="flashDeadline1" data-until="2026-08-31">📌 Deadline UEMOA, MAINSTREAM et Bourses Mastercard/2iE : 30-31 août 2026 — ne ratez pas la date&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; </span>🎓 <span id="flashOppCount">28+</span> opportunités vérifiées disponibles sur la plateforme&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; 🤝 <span id="flashMentorCount">9</span> mentors disponibles pour vous accompagner gratuitement&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; <img src="logo-mastercard-foundation.png" class="flash-infos-logo" alt="Mastercard Foundation">Un projet mené par des étudiants boursiers de la Mastercard Foundation à <img src="logo-2ie-officiel.png" class="flash-infos-logo" alt="Institut 2iE">l'Institut 2iE&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; 📱 Retrouvez-nous sur Facebook, LinkedIn et notre chaîne WhatsApp</span>
+  </div>
+</div>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack" class="brand-mark">
+    <div class="brand-text">
+      <div class="brand-word">AfricanYouth GiveBack</div>
+      <div class="brand-tagline">Éducation, accès aux opportunités</div>
+    </div>
+  </a>
+  <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Changer de thème">🌙</button>
+  <button class="hamburger" aria-label="Menu">☰</button>
+  <nav class="sans">
+    <a href="index.html">Opportunités</a>
+    <a href="tutoriel.html">Comment ça marche</a>
+    <a href="formations.html">Mini-formations</a>
+    <a href="espace.html">Mon espace</a>
+  </nav>
+<script>
+(function () {
+  const page = (location.pathname.split("/").pop() || "index.html").replace(/\.html$/, "");
+  document.querySelectorAll("nav.sans a[href]").forEach(a => {
+    const hrefPage = a.getAttribute("href").replace(/\.html$/, "");
+    if (hrefPage === page || (page === "" && hrefPage === "index")) a.classList.add("page-active");
+  });
+})();
+</script>
+  <div class="social-icons-header">
+    <a href="https://www.facebook.com/profile.php?id=61593783893327" target="_blank" rel="noopener" class="social-icon social-fb" aria-label="Facebook" title="Facebook">f</a>
+    <a href="https://www.linkedin.com/company/144639927" target="_blank" rel="noopener" class="social-icon social-li" aria-label="LinkedIn" title="LinkedIn">in</a>
+    <a href="https://whatsapp.com/channel/0029Vb9Px9H2f3EELsdZdG2Y" target="_blank" rel="noopener" class="social-icon social-wa" aria-label="WhatsApp" title="Chaîne WhatsApp">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.35 5.07L2 22l5.07-1.32C8.53 21.5 10.22 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.62-1.28 1.18-1.77 1.24-.45.06-1.02.08-1.65-.1-.38-.11-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.07-1.42-1.07-2.7s.68-1.92.92-2.18c.24-.26.53-.32.7-.32l.5.01c.16.01.38-.06.6.45.22.53.75 1.83.82 1.96.07.13.11.29.02.47-.09.18-.14.29-.27.45-.13.16-.28.35-.4.47-.13.13-.27.27-.12.53.16.26.7 1.15 1.5 1.86 1.03.92 1.9 1.2 2.16 1.34.26.13.42.11.57-.07.16-.18.66-.77.83-1.03.18-.26.35-.22.6-.13.24.09 1.53.72 1.79.85.26.13.44.2.5.31.06.11.06.65-.16 1.27z"/></svg>
+    </a>
+    <a href="https://forms.gle/SzUAyUZCgj9gqtSo7" target="_blank" rel="noopener" class="social-icon social-form" aria-label="Donner votre avis" title="Aidez-nous à améliorer la plateforme">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 2h6a2 2 0 012 2v16a2 2 0 01-2 2H9a2 2 0 01-2-2V4a2 2 0 012-2z" stroke="currentColor" stroke-width="1.8"/><path d="M9 7h6M9 11h6M9 15h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </a>
+  </div>
+
+</header>
+
+<div class="wrap">
+  <h1>Créez votre CV et votre lettre de motivation</h1>
+  <p class="lead">Remplissez le formulaire, l'aperçu se met à jour en direct. Une fois prêt, téléchargez en PDF.</p>
+
+  <div class="modeles-box">
+    <h3 style="margin:0 0 8px;">📄 Besoin d'inspiration ? Nos exemples de référence</h3>
+    <p style="font-size:13px; color:var(--ink-soft); margin:0 0 14px;">
+      Ce sont des <b>exemples</b> à consulter et personnaliser — pas des documents à imprimer tels quels. Chaque modèle explique précisément comment l'adapter à votre situation.
+    </p>
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      <a href="modeles/exemple-cv.pdf" target="_blank" class="btn" style="text-decoration:none; display:inline-block;" onclick="logUsage('exemple_cv')">
+        ⬇ Exemple de CV
+      </a>
+      <a href="modeles/exemple-lettre-motivation.pdf" target="_blank" class="btn" style="text-decoration:none; display:inline-block; background:var(--gold);" onclick="logUsage('exemple_lettre_motivation')">
+        ⬇ Exemple de lettre de motivation
+      </a>
+      <a href="modeles/exemple-demande.pdf" target="_blank" class="btn" style="text-decoration:none; display:inline-block; background:var(--forest-deep);" onclick="logUsage('exemple_demande')">
+        ⬇ Exemple de demande administrative
+      </a>
+    </div>
+    <p style="font-size:12px; color:var(--ink-soft); margin:14px 0 6px; font-weight:600;">Modèles spécifiques aux bourses 2iE / Mastercard Foundation :</p>
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      <a href="modeles/modele-lettre-centrale-2ie.pdf" target="_blank" class="btn" style="text-decoration:none; display:inline-block;" onclick="logUsage('modele_centrale_2ie')">
+        ⬇ Modèle — Bourse Centrale-2iE
+      </a>
+      <a href="modeles/modele-lettre-emih-eree-bgis.pdf" target="_blank" class="btn" style="text-decoration:none; display:inline-block; background:var(--gold);" onclick="logUsage('modele_emih_eree_bgis')">
+        ⬇ Modèle — Bourses EMIH / EREE / BGIS
+      </a>
+    </div>
+  </div>
+
+  <div class="tabs" style="max-width:340px;">
+    <button class="tab active" id="tabCv">Mon CV</button>
+    <button class="tab" id="tabLettre">Ma lettre</button>
+  </div>
+
+  <div id="cvTool">
+  <div class="tool-layout">
+    <div class="form-panel">
+      <h3>Informations générales</h3>
+      <div class="mini-field"><label>Photo</label><input type="file" id="cvPhoto" accept="image/png, image/jpeg, image/webp"><span id="cvPhotoStatus" style="font-family:Inter,sans-serif; font-size:10.5px; color:var(--ink-soft); display:block; margin-top:4px;"></span></div>
+      <div class="mini-field"><label>Nom complet</label><input type="text" id="cvNom" placeholder="Ex : Kabre Olivier"></div>
+      <div class="mini-field"><label>Titre / poste visé</label><input type="text" id="cvTitre" placeholder="Ex : Étudiant en Génie Civil"></div>
+      <div class="mini-field"><label>Email</label><input type="text" id="cvEmail"></div>
+      <div class="mini-field"><label>Téléphone</label><input type="text" id="cvTel"></div>
+      <div class="mini-field"><label>Ville, Pays</label><input type="text" id="cvLieu" placeholder="Ouagadougou, Burkina Faso"></div>
+      <div class="mini-field"><label>Résumé (2-3 phrases)</label><textarea id="cvResume" placeholder="Ex : Étudiant motivé en 3e année de Bachelor, passionné par..."></textarea></div>
+
+      <h3>Formation</h3>
+      <div id="cvFormationList"></div>
+      <button type="button" class="add-btn" id="addFormation">+ Ajouter une formation</button>
+
+      <h3>Expériences</h3>
+      <div id="cvExperienceList"></div>
+      <button type="button" class="add-btn" id="addExperience">+ Ajouter une expérience</button>
+
+      <h3>Compétences</h3>
+      <div class="mini-field"><label>Séparées par des virgules</label><input type="text" id="cvCompetences" placeholder="AutoCAD, Excel, Gestion de projet, Anglais"></div>
+
+      <button class="btn" style="margin-top:16px; width:100%;" onclick="logUsage('cv_genere'); printClean()">📄 Télécharger en PDF</button>
+    </div>
+
+    <div class="cv-preview" id="cvPreview"></div>
+  </div>
+  </div>
+
+  <div id="lettreTool" style="display:none;">
+  <div class="tool-layout">
+    <div class="form-panel">
+      <h3>Informations</h3>
+      <div class="mini-field"><label>Votre nom</label><input type="text" id="lNom"></div>
+      <div class="mini-field"><label>Ville, date</label><input type="text" id="lLieuDate" placeholder="Ouagadougou, le 11 août 2026"></div>
+      <div class="mini-field"><label>Destinataire (organisme)</label><input type="text" id="lDestinataire" placeholder="Ex : Fondation Mastercard — 2iE"></div>
+      <div class="mini-field"><label>Poste / bourse visée</label><input type="text" id="lPoste" placeholder="Ex : Bourse Bachelor BGIS"></div>
+      <div class="mini-field"><label>Pourquoi cette opportunité vous intéresse</label><textarea id="lMotivation" placeholder="Ex : Cette bourse correspond à mon projet de..."></textarea></div>
+      <div class="mini-field"><label>Vos atouts pour ce poste/cette bourse</label><textarea id="lAtouts" placeholder="Ex : Mon parcours en... m'a permis de développer..."></textarea></div>
+      <div class="mini-field"><label>Phrase de conclusion</label><textarea id="lConclusion" placeholder="Ex : Je reste à votre disposition pour un entretien..."></textarea></div>
+
+      <button class="btn" style="margin-top:16px; width:100%;" onclick="logUsage('lettre_generee'); printClean()">📄 Télécharger en PDF</button>
+    </div>
+
+    <div class="lettre-preview" id="lettrePreview"></div>
+  </div>
+  </div>
+</div>
+
+<script>
+const tabCv = document.getElementById("tabCv");
+const tabLettre = document.getElementById("tabLettre");
+const cvTool = document.getElementById("cvTool");
+const lettreTool = document.getElementById("lettreTool");
+
+tabCv.onclick = () => { tabCv.classList.add("active"); tabLettre.classList.remove("active"); cvTool.style.display="block"; lettreTool.style.display="none"; };
+tabLettre.onclick = () => { tabLettre.classList.add("active"); tabCv.classList.remove("active"); lettreTool.style.display="block"; cvTool.style.display="none"; renderLettre(); };
+
+let formationCount = 0;
+let experienceCount = 0;
+
+function addFormationBlock() {
+  formationCount++;
+  const div = document.createElement("div");
+  div.className = "repeat-block";
+  div.innerHTML = `
+    <button type="button" class="remove">Supprimer</button>
+    <div class="mini-field"><label>Diplôme / formation</label><input type="text" class="f-diplome" placeholder="Ex : Bachelor Génie Civil"></div>
+    <div class="mini-field"><label>Établissement</label><input type="text" class="f-etab" placeholder="Ex : 2iE"></div>
+    <div class="mini-field"><label>Période</label><input type="text" class="f-periode" placeholder="Ex : 2023 - 2026"></div>
+  `;
+  div.querySelector(".remove").addEventListener("click", () => { div.remove(); renderCv(); });
+  document.getElementById("cvFormationList").appendChild(div);
+  div.querySelectorAll("input").forEach(i => i.addEventListener("input", renderCv));
+}
+
+function addExperienceBlock() {
+  experienceCount++;
+  const div = document.createElement("div");
+  div.className = "repeat-block";
+  div.innerHTML = `
+    <button type="button" class="remove">Supprimer</button>
+    <div class="mini-field"><label>Poste / rôle</label><input type="text" class="e-poste" placeholder="Ex : Stagiaire ingénieur"></div>
+    <div class="mini-field"><label>Structure</label><input type="text" class="e-structure" placeholder="Ex : Entreprise X"></div>
+    <div class="mini-field"><label>Période</label><input type="text" class="e-periode" placeholder="Ex : Juin - Août 2025"></div>
+    <div class="mini-field"><label>Description</label><textarea class="e-desc" placeholder="1-2 phrases sur vos missions"></textarea></div>
+  `;
+  div.querySelector(".remove").addEventListener("click", () => { div.remove(); renderCv(); });
+  document.getElementById("cvExperienceList").appendChild(div);
+  div.querySelectorAll("input, textarea").forEach(i => i.addEventListener("input", renderCv));
+}
+
+document.getElementById("addFormation").addEventListener("click", addFormationBlock);
+document.getElementById("addExperience").addEventListener("click", addExperienceBlock);
+
+let cvPhotoDataUrl = "";
+
+function printClean() {
+  const originalTitle = document.title;
+  document.title = "Document";
+  window.addEventListener("afterprint", function restore() {
+    document.title = originalTitle;
+    window.removeEventListener("afterprint", restore);
+  });
+  window.print();
+}
+
+function renderCv() {
+  const photo = cvPhotoDataUrl;
+  const nom = document.getElementById("cvNom").value.trim() || "Votre nom";
+  const titre = document.getElementById("cvTitre").value.trim();
+  const email = document.getElementById("cvEmail").value.trim();
+  const tel = document.getElementById("cvTel").value.trim();
+  const lieu = document.getElementById("cvLieu").value.trim();
+  const resume = document.getElementById("cvResume").value.trim();
+  const competences = document.getElementById("cvCompetences").value.trim();
+
+  const formations = Array.from(document.querySelectorAll("#cvFormationList .repeat-block")).map(b => ({
+    diplome: b.querySelector(".f-diplome").value.trim(),
+    etab: b.querySelector(".f-etab").value.trim(),
+    periode: b.querySelector(".f-periode").value.trim(),
+  })).filter(f => f.diplome || f.etab);
+
+  const experiences = Array.from(document.querySelectorAll("#cvExperienceList .repeat-block")).map(b => ({
+    poste: b.querySelector(".e-poste").value.trim(),
+    structure: b.querySelector(".e-structure").value.trim(),
+    periode: b.querySelector(".e-periode").value.trim(),
+    desc: b.querySelector(".e-desc").value.trim(),
+  })).filter(e => e.poste || e.structure);
+
+  const contactParts = [email, tel, lieu].filter(Boolean).join(" · ");
+
+  let html = `
+    <div class="cv-header">
+      ${photo ? `<img src="${photo}" class="cv-photo">` : `<div class="cv-photo"></div>`}
+      <div>
+        <p class="cv-name">${nom}</p>
+        ${titre ? `<p class="cv-titre">${titre}</p>` : ""}
+        <p class="cv-contact">${contactParts}</p>
+      </div>
+    </div>
+  `;
+
+  if (resume) html += `<p style="font-size:12.5px; font-family:Inter,sans-serif; color:#333;">${resume}</p>`;
+
+  if (formations.length) {
+    html += `<div class="cv-section-title">Formation</div>`;
+    formations.forEach(f => {
+      html += `<div class="cv-item"><div class="cv-item-title">${f.diplome}</div><div class="cv-item-sub">${f.etab}${f.periode ? " — " + f.periode : ""}</div></div>`;
+    });
+  }
+
+  if (experiences.length) {
+    html += `<div class="cv-section-title">Expériences</div>`;
+    experiences.forEach(e => {
+      html += `<div class="cv-item"><div class="cv-item-title">${e.poste}</div><div class="cv-item-sub">${e.structure}${e.periode ? " — " + e.periode : ""}</div>${e.desc ? `<div class="cv-item-desc">${e.desc}</div>` : ""}</div>`;
+    });
+  }
+
+  if (competences) {
+    html += `<div class="cv-section-title">Compétences</div><div class="cv-tags">`;
+    competences.split(",").map(c => c.trim()).filter(Boolean).forEach(c => {
+      html += `<span class="cv-tag">${c}</span>`;
+    });
+    html += `</div>`;
+  }
+
+  const today = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  html += `
+    <div style="margin-top:36px; display:flex; justify-content:flex-end;">
+      <div style="text-align:center; min-width:220px;">
+        <p style="font-family:Inter,sans-serif; font-size:11px; color:#666; margin:0 0 32px;">Fait le ${today}</p>
+        <div style="border-top:1px solid #999; padding-top:6px;">
+          <p style="font-family:Georgia,serif; font-size:13px; margin:0;">${nom}</p>
+          <p style="font-family:Inter,sans-serif; font-size:9.5px; color:#999; margin:2px 0 0;">Signature</p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("cvPreview").innerHTML = html;
+}
+
+["cvNom","cvTitre","cvEmail","cvTel","cvLieu","cvResume","cvCompetences"].forEach(id => {
+  document.getElementById(id).addEventListener("input", renderCv);
+});
+
+document.getElementById("cvPhoto").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  const status = document.getElementById("cvPhotoStatus");
+  if (!file) { cvPhotoDataUrl = ""; status.textContent = ""; renderCv(); return; }
+  if (file.size > 3 * 1024 * 1024) {
+    status.textContent = "Fichier trop lourd (max 3 Mo).";
+    e.target.value = "";
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    cvPhotoDataUrl = reader.result;
+    status.textContent = "✓ Photo ajoutée";
+    renderCv();
+  };
+  reader.readAsDataURL(file);
+});
+
+addFormationBlock();
+addExperienceBlock();
+renderCv();
+
+function renderLettre() {
+  const nom = document.getElementById("lNom").value.trim() || "Votre nom";
+  const lieuDate = document.getElementById("lLieuDate").value.trim();
+  const destinataire = document.getElementById("lDestinataire").value.trim() || "Madame, Monsieur";
+  const poste = document.getElementById("lPoste").value.trim();
+  const motivation = document.getElementById("lMotivation").value.trim();
+  const atouts = document.getElementById("lAtouts").value.trim();
+  const conclusion = document.getElementById("lConclusion").value.trim();
+
+  let text = "";
+  if (lieuDate) text += lieuDate + "\n\n";
+  text += "Objet : Candidature — " + (poste || "[votre bourse/poste]") + "\n\n";
+  text += destinataire + ",\n\n";
+  text += motivation ? motivation + "\n\n" : "[Expliquez ici pourquoi cette opportunité vous intéresse]\n\n";
+  text += atouts ? atouts + "\n\n" : "[Présentez vos atouts pour cette candidature]\n\n";
+  text += conclusion ? conclusion + "\n\n" : "Je reste à votre disposition pour tout complément d'information et me tiens prêt(e) pour un entretien.\n\n";
+  text += "Veuillez agréer, " + destinataire + ", l'expression de mes salutations distinguées.\n\n";
+  text += nom;
+
+  document.getElementById("lettrePreview").textContent = text;
+}
+
+["lNom","lLieuDate","lDestinataire","lPoste","lMotivation","lAtouts","lConclusion"].forEach(id => {
+  document.getElementById(id).addEventListener("input", renderLettre);
+});
+</script>
+<script>
+document.querySelectorAll(".hamburger").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const nav = btn.closest("header").querySelector("nav.sans");
+    if (nav) nav.classList.toggle("open");
+  });
+});
+</script>
+<script>
+// Enregistre discrètement l'usage des outils CV/lettre (modèles téléchargés,
+// CV/lettre générés) pour mesurer l'impact réel de la plateforme.
+// N'affecte jamais l'action de l'utilisateur : erreurs ignorées en silence.
+async function logUsage(type) {
+  try {
+    const { data: { user } } = await db.auth.getUser();
+    await db.from("outils_usage").insert({ type, user_id: user ? user.id : null });
+  } catch (e) {
+    // silencieux : ne jamais bloquer le téléchargement si le suivi échoue
+  }
+}
+</script>
+<footer class="site-footer">
+  <div class="wrap footer-top">
+    <div class="footer-brand-col">
+      <div class="footer-brand-name">AfricanYouth GiveBack</div>
+      <p class="footer-brand-tagline">AfricanYouth GiveBack est un projet réalisé par des étudiants du programme Mastercard Foundation Scholars à l'Institut 2iE, dans le cadre du Give Back Activity. La plateforme centralise des opportunités provenant de nombreuses institutions africaines et internationales, et propose un accompagnement par des mentors bénévoles.</p>
+    </div>
+    <div class="footer-nav-col">
+      <h4>Le site</h4>
+      <a href="index.html">Opportunités</a>
+      <a href="mentors.html">Mentors</a>
+      <a href="formations.html">Mini-formations</a>
+      <a href="communaute.html">Communauté</a>
+      <a href="tutoriel.html">Comment ça marche</a>
+    </div>
+    <div class="footer-nav-col">
+      <h4>Accéder à Giveback</h4>
+      <a href="espace.html">Accéder à mon espace</a>
+      <a href="auth.html">Se connecter</a>
+      <a href="feedback.html">Donner votre avis</a>
+    </div>
+  </div>
+  <div class="wrap footer-bottom-row">
+    <span>© 2026 AfricanYouth GiveBack. Tous droits réservés. — Give Back Activity, Mastercard Foundation × Institut 2iE.</span>
+    <a href="confidentialite.html">Politique de confidentialité</a>
+  </div>
+  <div class="partner-logos-marquee">
+    <div class="partner-logos-track">
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+    </div>
+  </div>
+  <div class="footer-marquee">
+    <span class="footer-marquee-track">Cette plateforme est développée par des étudiants boursiers de la Fondation Mastercard en formation à l'Institut International d'Ingénierie de l'Eau et de l'Environnement (2iE) — elle ne constitue pas un service officiel de l'Institut 2iE ni de la Fondation Mastercard.</span>
+  </div>
+</footer>
+
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const saved = sessionStorage.getItem("giveback-theme") || "light";
+  root.setAttribute("data-theme", saved);
+
+  const MOON_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const SUN_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("themeToggleBtn");
+    if (!btn) return;
+
+    function updateIcon() {
+      const current = root.getAttribute("data-theme") || "light";
+      // L'icône affichée représente le thème vers lequel on bascule en cliquant
+      btn.innerHTML = current === "light" ? MOON_SVG : SUN_SVG;
+      btn.setAttribute("aria-label", current === "light" ? "Passer au thème sombre" : "Passer au thème clair");
+    }
+    updateIcon();
+
+    btn.addEventListener("click", () => {
+      const current = root.getAttribute("data-theme") || "light";
+      const next = current === "light" ? "dark" : "light";
+      root.setAttribute("data-theme", next);
+      sessionStorage.setItem("giveback-theme", next);
+      updateIcon();
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AfricanYouth GiveBack — Communauté</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .post{ background:var(--paper-raised); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:14px; }
+  .post-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .post-author{ font-family:Inter,sans-serif; font-size:13px; font-weight:700; color:var(--forest); }
+  .post-date{ font-family:Inter,sans-serif; font-size:11px; color:var(--ink-soft); }
+  .post-content{ font-size:14px; line-height:1.5; margin-bottom:12px; }
+  .post-actions{ display:flex; gap:16px; border-top:1px solid var(--line); padding-top:10px; flex-wrap:wrap; align-items:center; }
+  .action-btn{ background:none; border:none; font-family:Inter,sans-serif; font-size:12.5px; color:var(--ink-soft); display:flex; align-items:center; gap:5px; padding:0; }
+  .action-btn.liked{ color:#C0392B; font-weight:600; }
+  .action-btn:hover{ color:var(--forest); }
+  .reactions-row{ display:flex; gap:4px; }
+  .who-reacted{ font-family:Inter,sans-serif; font-size:11px; color:var(--ink-soft); font-style:italic; }
+  .reaction-btn{ background:none; border:1px solid var(--line); border-radius:999px; font-size:13px; padding:3px 9px; display:flex; align-items:center; gap:4px; font-family:Inter,sans-serif; color:var(--ink-soft); }
+  .reaction-btn .rcount{ font-size:11px; }
+  .reaction-btn.active{ background:var(--gold-soft); border-color:var(--gold); color:var(--forest-deep); font-weight:600; }
+  .reaction-btn:hover{ border-color:var(--forest); }
+  .comments-zone{ margin-top:12px; display:none; }
+  .comments-zone.open{ display:block; }
+  .comment{ padding:8px 0; border-top:1px solid var(--line); font-family:Inter,sans-serif; font-size:12.5px; }
+  .comment b{ color:var(--forest); }
+  .comment-form{ display:flex; gap:8px; margin-top:10px; }
+  .comment-form input{ flex:1; border:1px solid var(--line); border-radius:6px; padding:7px 10px; font-size:12.5px; font-family:inherit; }
+  .comment-form button{ background:var(--forest); color:var(--on-dark); border:none; padding:7px 14px; border-radius:6px; font-size:12px; font-family:Inter,sans-serif; font-weight:600; }
+  .post-form{ background:var(--paper-raised); border:1px solid var(--line); border-radius:12px; padding:18px; margin-bottom:28px; }
+  .post-form textarea{ width:100%; min-height:70px; border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-family:inherit; font-size:14px; resize:vertical; }
+  .post-form button{ margin-top:10px; }
+  .login-notice{ font-family:Inter,sans-serif; font-size:13px; color:var(--ink-soft); background:var(--gold-soft); padding:14px 16px; border-radius:10px; margin-bottom:28px; }
+  .login-notice a{ color:var(--forest); font-weight:600; }
+</style>
+</head>
+<body>
+
+<div class="ambient-layer" style="display:none"><div class="wash"></div><div id="ambientParticles"></div></div>
+<div class="flash-infos">
+  <span class="flash-infos-label">⚡ Flash infos</span>
+  <div class="flash-infos-track">
+    <span id="flashInfosText"><span id="flashAccompagnement"></span><span id="flashDeadline1" data-until="2026-08-31">📌 Deadline UEMOA, MAINSTREAM et Bourses Mastercard/2iE : 30-31 août 2026 — ne ratez pas la date&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; </span>🎓 <span id="flashOppCount">28+</span> opportunités vérifiées disponibles sur la plateforme&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; 🤝 <span id="flashMentorCount">9</span> mentors disponibles pour vous accompagner gratuitement&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; <img src="logo-mastercard-foundation.png" class="flash-infos-logo" alt="Mastercard Foundation">Un projet mené par des étudiants boursiers de la Mastercard Foundation à <img src="logo-2ie-officiel.png" class="flash-infos-logo" alt="Institut 2iE">l'Institut 2iE&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; 📱 Retrouvez-nous sur Facebook, LinkedIn et notre chaîne WhatsApp</span>
+  </div>
+</div>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack" class="brand-mark">
+    <div class="brand-text">
+      <div class="brand-word">AfricanYouth GiveBack</div>
+      <div class="brand-tagline">Éducation, accès aux opportunités</div>
+    </div>
+  </a>
+  <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Changer de thème">🌙</button>
+  <button class="hamburger" aria-label="Menu">☰</button>
+  <nav class="sans" style="align-items:center;">
+    <a href="index.html">Opportunités</a>
+    <a href="tutoriel.html">Comment ça marche</a>
+    <a href="formations.html">Mini-formations</a>
+    <a href="mentors.html">Mentors</a>
+    <a href="communaute.html">Communauté</a>
+    <a href="cv-builder.html">Mon CV</a>
+    <a href="feedback.html">Votre avis</a>
+    <a href="espace.html">Mon espace</a>
+  </nav>
+  <button id="notifBell" class="notif-bell" style="display:none;" aria-label="Notifications">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zM18 16v-5c0-3.07-1.63-5.64-4.5-6.32V4a1.5 1.5 0 00-3 0v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="currentColor"/>
+    </svg>
+    <span id="notifCount" class="notif-count"></span>
+  </button>
+<script>
+(function () {
+  const page = (location.pathname.split("/").pop() || "index.html").replace(/\.html$/, "");
+  document.querySelectorAll("nav.sans a[href]").forEach(a => {
+    const hrefPage = a.getAttribute("href").replace(/\.html$/, "");
+    if (hrefPage === page || (page === "" && hrefPage === "index")) a.classList.add("page-active");
+  });
+})();
+</script>
+  <div class="social-icons-header">
+    <a href="https://www.facebook.com/profile.php?id=61593783893327" target="_blank" rel="noopener" class="social-icon social-fb" aria-label="Facebook" title="Facebook">f</a>
+    <a href="https://www.linkedin.com/company/144639927" target="_blank" rel="noopener" class="social-icon social-li" aria-label="LinkedIn" title="LinkedIn">in</a>
+    <a href="https://whatsapp.com/channel/0029Vb9Px9H2f3EELsdZdG2Y" target="_blank" rel="noopener" class="social-icon social-wa" aria-label="WhatsApp" title="Chaîne WhatsApp">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.35 5.07L2 22l5.07-1.32C8.53 21.5 10.22 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.62-1.28 1.18-1.77 1.24-.45.06-1.02.08-1.65-.1-.38-.11-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.07-1.42-1.07-2.7s.68-1.92.92-2.18c.24-.26.53-.32.7-.32l.5.01c.16.01.38-.06.6.45.22.53.75 1.83.82 1.96.07.13.11.29.02.47-.09.18-.14.29-.27.45-.13.16-.28.35-.4.47-.13.13-.27.27-.12.53.16.26.7 1.15 1.5 1.86 1.03.92 1.9 1.2 2.16 1.34.26.13.42.11.57-.07.16-.18.66-.77.83-1.03.18-.26.35-.22.6-.13.24.09 1.53.72 1.79.85.26.13.44.2.5.31.06.11.06.65-.16 1.27z"/></svg>
+    </a>
+    <a href="https://forms.gle/SzUAyUZCgj9gqtSo7" target="_blank" rel="noopener" class="social-icon social-form" aria-label="Donner votre avis" title="Aidez-nous à améliorer la plateforme">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 2h6a2 2 0 012 2v16a2 2 0 01-2 2H9a2 2 0 01-2-2V4a2 2 0 012-2z" stroke="currentColor" stroke-width="1.8"/><path d="M9 7h6M9 11h6M9 15h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </a>
+  </div>
+
+  <div id="notifPanel" class="notif-panel"></div>
+</header>
+
+<section class="page-shell">
+  <div class="shell-bg"></div>
+  <div class="shell-particles" id="heroParticles"></div>
+
+  <div class="hero-content" style="padding-top:56px; padding-bottom:8px;">
+    <h1>Communauté d'entraide</h1>
+    <p class="lead">Partagez votre expérience, posez vos questions, encouragez les autres.</p>
+  </div>
+
+  <div class="wrap shell-inner" style="max-width:700px;">
+  <div id="formZone"></div>
+  <div id="posts"><p class="sans" style="color:var(--ink-soft)">Chargement…</p></div>
+  </div>
+</section>
+
+<script src="supabase-js.min.js"></script>
+<script src="supabaseClient.js"></script>
+<script>
+(async function () {
+  // Masque automatiquement toute deadline déjà passée dans le bandeau
+  document.querySelectorAll("[data-until]").forEach(el => {
+    const limite = new Date(el.getAttribute("data-until") + "T23:59:59");
+    if (new Date() > limite) el.remove();
+  });
+  try {
+    const elOpp = document.getElementById("flashOppCount");
+    if (elOpp) {
+      const { count } = await db.from("opportunities").select("*", { count: "exact", head: true });
+      if (count) elOpp.textContent = count + "+";
+    }
+  } catch (e) { /* silencieux, le texte par défaut reste affiché */ }
+  try {
+    const elMentor = document.getElementById("flashMentorCount");
+    if (elMentor) {
+      const { count } = await db.from("mentors").select("*", { count: "exact", head: true });
+      if (count) elMentor.textContent = count;
+    }
+  } catch (e) { /* silencieux */ }
+})();
+</script>
+<script>
+let currentUser = null;
+let currentPrenom = "";
+let currentPays = "";
+let currentVille = "";
+
+async function init() {
+  const { data: { session } } = await db.auth.getSession();
+  currentUser = session ? session.user : null;
+
+  const formZone = document.getElementById("formZone");
+  if (currentUser) {
+    const { data: profile } = await db.from("profiles").select("prenom, pays, ville").eq("id", currentUser.id).single();
+    currentPrenom = profile?.prenom || "Anonyme";
+    currentPays = profile?.pays || "";
+    currentVille = profile?.ville || "";
+    formZone.innerHTML = `
+      <div class="post-form">
+        <textarea id="postContent" placeholder="Partagez quelque chose avec la communauté…"></textarea>
+        <button class="btn" id="postBtn">Publier</button>
+      </div>
+    `;
+    document.getElementById("postBtn").addEventListener("click", async () => {
+      const content = document.getElementById("postContent").value.trim();
+      if (!content) return;
+      await db.from("posts").insert({
+        user_id: currentUser.id, auteur_prenom: currentPrenom, contenu: content,
+        auteur_pays: currentPays || null, auteur_ville: currentVille || null,
+      });
+      document.getElementById("postContent").value = "";
+      loadPosts();
+    });
+
+    document.getElementById("notifBell").style.display = "inline-block";
+    initNotifications();
+  } else {
+    formZone.innerHTML = `<div class="login-notice">Connectez-vous pour publier, liker ou commenter. <a href="auth.html">Se connecter →</a></div>`;
+  }
+
+  loadPosts();
+}
+
+async function loadPosts() {
+  const { data, error } = await db.from("posts").select("*").order("created_at", { ascending: false });
+  const postsDiv = document.getElementById("posts");
+  postsDiv.innerHTML = "";
+
+  if (error) {
+    postsDiv.innerHTML = `<p class="sans" style="color:var(--danger)">Erreur : ${error.message}</p>`;
+    return;
+  }
+  if (!data || data.length === 0) {
+    postsDiv.innerHTML = `<div class="empty">Aucune publication pour le moment. Soyez le premier à écrire !</div>`;
+    return;
+  }
+
+  const REACTIONS = [
+    { type: "jaime", emoji: "👍" },
+    { type: "coeur", emoji: "❤️" },
+    { type: "rire", emoji: "😂" },
+    { type: "pleurer", emoji: "😢" },
+    { type: "jenaimepas", emoji: "👎" },
+  ];
+
+  for (const p of data) {
+    const date = new Date(p.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+
+    const { data: allLikes } = await db.from("likes").select("type, user_id").eq("post_id", p.id);
+    const counts = {};
+    let myReaction = null;
+    const likerIds = [];
+    (allLikes || []).forEach(l => {
+      counts[l.type] = (counts[l.type] || 0) + 1;
+      if (currentUser && l.user_id === currentUser.id) myReaction = l.type;
+      if (l.user_id) likerIds.push(l.user_id);
+    });
+
+    // Qui a réagi — noms affichés directement collés aux réactions, comme sur Facebook
+    let whoReactedHtml = "";
+    if (likerIds.length > 0) {
+      const uniqueIds = [...new Set(likerIds)];
+      const { data: likerProfiles } = await db.from("profiles").select("id, prenom").in("id", uniqueIds);
+      const idToName = {};
+      (likerProfiles || []).forEach(pr => { idToName[pr.id] = pr.prenom || "Anonyme"; });
+      const names = uniqueIds.map(id => idToName[id] || "Anonyme");
+      let label;
+      if (names.length <= 3) {
+        label = names.join(", ");
+      } else {
+        label = `${names.slice(0, 3).join(", ")} et ${names.length - 3} autre${names.length - 3 > 1 ? "s" : ""}`;
+      }
+      whoReactedHtml = `<div class="who-reacted">${label} ${likerIds.length > 1 ? "ont réagi" : "a réagi"}</div>`;
+    }
+
+    const { count: commentCount } = await db.from("comments").select("*", { count: "exact", head: true }).eq("post_id", p.id);
+
+    const reactionsHtml = REACTIONS.map(r => `
+      <button class="reaction-btn ${myReaction === r.type ? "active" : ""}" data-post="${p.id}" data-type="${r.type}">
+        ${r.emoji}${counts[r.type] ? `<span class="rcount">${counts[r.type]}</span>` : ""}
+      </button>
+    `).join("");
+
+    const location = [p.auteur_ville, p.auteur_pays].filter(Boolean).join(", ");
+
+    const el = document.createElement("div");
+    el.className = "post";
+    el.innerHTML = `
+      <div class="post-head">
+        <span>
+          <span class="post-author">${p.auteur_prenom || "Anonyme"}</span>
+          ${location ? `<span class="sans" style="font-size:11px; color:var(--ink-soft);"> · ${location}</span>` : ""}
+        </span>
+        <span class="post-date">${date}</span>
+      </div>
+      <div class="post-content">${p.contenu}</div>
+      <div class="post-actions">
+        <div class="reactions-row">${reactionsHtml}</div>
+        ${whoReactedHtml}
+        <button class="action-btn comment-toggle" data-post="${p.id}">💬 <span>${commentCount || 0} commentaire${commentCount === 1 ? "" : "s"}</span></button>
+      </div>
+      <div class="comments-zone" id="comments-${p.id}"></div>
+    `;
+    postsDiv.appendChild(el);
+  }
+
+  postsDiv.querySelectorAll(".reaction-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      if (!currentUser) { window.location.href = "auth.html"; return; }
+      const postId = parseInt(btn.dataset.post, 10);
+      const type = btn.dataset.type;
+      const alreadyActive = btn.classList.contains("active");
+
+      if (alreadyActive) {
+        await db.from("likes").delete().eq("post_id", postId).eq("user_id", currentUser.id);
+      } else {
+        await db.from("likes").upsert(
+          { post_id: postId, user_id: currentUser.id, type },
+          { onConflict: "post_id,user_id" }
+        );
+      }
+      loadPosts();
+    });
+  });
+
+  postsDiv.querySelectorAll(".comment-toggle").forEach(btn => {
+    btn.addEventListener("click", () => openComments(parseInt(btn.dataset.post, 10)));
+  });
+}
+
+async function openComments(postId) {
+  const zone = document.getElementById("comments-" + postId);
+  const isOpen = zone.classList.contains("open");
+  if (isOpen) { zone.classList.remove("open"); return; }
+
+  zone.classList.add("open");
+  zone.innerHTML = `<p class="sans" style="color:var(--ink-soft); font-size:12px;">Chargement…</p>`;
+
+  const { data: comments } = await db.from("comments").select("*").eq("post_id", postId).order("created_at", { ascending: true });
+
+  let html = "";
+  (comments || []).forEach(c => {
+    html += `<div class="comment"><b>${c.auteur_prenom || "Anonyme"}</b> — ${c.contenu}</div>`;
+  });
+
+  if (!comments || comments.length === 0) {
+    html += `<p class="sans" style="color:var(--ink-soft); font-size:12px;">Aucun commentaire pour le moment.</p>`;
+  }
+
+  if (currentUser) {
+    html += `
+      <div class="comment-form">
+        <input type="text" id="commentInput-${postId}" placeholder="Écrire un commentaire…">
+        <button data-post="${postId}" class="send-comment">Envoyer</button>
+      </div>
+    `;
+  }
+
+  zone.innerHTML = html;
+
+  if (currentUser) {
+    zone.querySelector(".send-comment").addEventListener("click", async () => {
+      const input = document.getElementById("commentInput-" + postId);
+      const content = input.value.trim();
+      if (!content) return;
+      await db.from("comments").insert({ post_id: postId, user_id: currentUser.id, auteur_prenom: currentPrenom, contenu: content });
+      await loadPosts();
+      openComments(postId);
+    });
+  }
+}
+
+async function initNotifications() {
+  const bell = document.getElementById("notifBell");
+  const panel = document.getElementById("notifPanel");
+  let open = false;
+
+  async function refreshCount() {
+    const { count } = await db
+      .from("notifications")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", currentUser.id)
+      .eq("lu", false);
+    const badge = document.getElementById("notifCount");
+    if (count && count > 0) {
+      badge.textContent = count > 9 ? "9+" : count;
+      badge.style.display = "inline-block";
+    } else {
+      badge.style.display = "none";
+    }
+  }
+
+  async function renderPanel() {
+    const { data } = await db
+      .from("notifications")
+      .select("*")
+      .eq("user_id", currentUser.id)
+      .order("created_at", { ascending: false })
+      .limit(20);
+
+    if (!data || data.length === 0) {
+      panel.innerHTML = `<div class="notif-empty">Aucune notification pour le moment.</div>`;
+      return;
+    }
+    panel.innerHTML = data.map(n => {
+      const label = n.type === "like"
+        ? `${n.from_prenom} a aimé votre publication`
+        : `${n.from_prenom} a commenté votre publication`;
+      const date = new Date(n.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+      return `<div class="notif-item ${n.lu ? "" : "unread"}">${label}<br><span style="color:var(--ink-soft); font-size:11px;">${date}</span></div>`;
+    }).join("");
+  }
+
+  bell.addEventListener("click", async () => {
+    open = !open;
+    panel.classList.toggle("open", open);
+    if (open) {
+      await renderPanel();
+      await db.from("notifications").update({ lu: true }).eq("user_id", currentUser.id).eq("lu", false);
+      refreshCount();
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (open && !panel.contains(e.target) && e.target !== bell) {
+      open = false;
+      panel.classList.remove("open");
+    }
+  });
+
+  refreshCount();
+}
+
+init();
+</script>
+<script>
+(function () {
+  const zone = document.getElementById("heroParticles");
+  if (!zone) return;
+  const n = 26;
+  for (let i = 0; i < n; i++) {
+    const dot = document.createElement("span");
+    const size = 3 + Math.random() * 5;
+    dot.style.width = size + "px";
+    dot.style.height = size + "px";
+    dot.style.left = Math.random() * 100 + "%";
+    dot.style.top = Math.random() * 100 + "%";
+    dot.style.animationDuration = (5 + Math.random() * 6) + "s";
+    dot.style.animationDelay = (Math.random() * 6) + "s";
+    zone.appendChild(dot);
+  }
+})();
+</script>
+<button class="assistant-fab" id="assistantFab" aria-label="Ouvrir l'assistant">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"
+      stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="8" cy="12" r="1.15" fill="currentColor"/>
+    <circle cx="12" cy="12" r="1.15" fill="currentColor"/>
+    <circle cx="16" cy="12" r="1.15" fill="currentColor"/>
+  </svg>
+  <span class="fab-notif-dot"></span>
+</button>
+<div class="assistant-panel" id="assistantPanel">
+  <div class="assistant-header">
+    <span>🌱 Assistant Giveback</span>
+    <button id="assistantClose">✕</button>
+  </div>
+  <div class="assistant-body" id="assistantBody">
+    <div class="assistant-msg bot">Bonjour Je peux répondre aux questions courantes et aussi consulter les vraies données de la plateforme (bourses disponibles, mentors, tes candidatures). Choisis une question ou écris la tienne.</div>
+  </div>
+  <div class="assistant-suggestions" id="assistantSuggestions"></div>
+  <div class="assistant-input-row">
+    <input type="text" id="assistantInput" placeholder="Pose ta question…">
+    <button id="assistantSend">Envoyer</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  const FAQ = [
+    {
+      q: "Bonjour !",
+      k: ["salut", "bonjour", "bonsoir", "hello", "coucou", "cc"],
+      a: "Bonjour Comment puis-je t'aider ? Tu peux me demander \"quelles bourses sont disponibles\", \"quel mentor pour m'aider\", ou n'importe quelle question sur la plateforme."
+    },
+    {
+      q: "Comment créer un compte ?",
+      k: ["compte", "inscription", "inscrire", "créer un compte", "s'inscrire"],
+      a: "Clique sur \"Se connecter\" en haut à droite, puis sur l'onglet \"Créer un compte\". Remplis le formulaire, tu recevras un email de confirmation à valider avant de pouvoir te connecter."
+    },
+    {
+      q: "Comment contacter un mentor ?",
+      k: ["mentor", "contacter", "whatsapp", "accompagn", "aide"],
+      a: "Va sur la page \"Mentors\", choisis celui qui correspond à ton besoin, puis clique sur \"Demander ce mentor\" ou directement sur les liens Email/WhatsApp affichés sur sa carte."
+    },
+    {
+      q: "Le site est-il gratuit ?",
+      k: ["gratuit", "payant", "prix", "coût", "argent"],
+      a: "Oui, la plateforme est entièrement gratuite. Elle centralise des opportunités réelles (bourses, stages, formations) et un accompagnement par des mentors bénévoles."
+    },
+    {
+      q: "Comment suivre ma candidature ?",
+      k: ["suivre", "candidature", "suivi", "statut"],
+      a: "Sur une opportunité, clique sur \"Ajouter à mon suivi\" : elle apparaît alors dans \"Mon espace\". Attention, ça ne remplace pas la vraie candidature — tu dois aussi postuler sur le site officiel via le bouton \"Voir l'offre officielle\"."
+    },
+    {
+      q: "J'ai oublié mon mot de passe",
+      k: ["mot de passe", "oublié", "password", "reset"],
+      a: "La réinitialisation automatique n'est pas encore disponible. En attendant, contacte Kabre Olivier (coordinateur) via la page \"Mentors\" pour te débloquer."
+    },
+    {
+      q: "Comment publier dans la communauté ?",
+      k: ["publier", "communauté", "poster", "message", "partager"],
+      a: "Va sur la page \"Communauté\", connecte-toi si besoin, écris ton message dans la zone de texte en haut et clique sur \"Publier\". Les autres peuvent réagir et commenter."
+    },
+    {
+      q: "Puis-je modifier mon profil plus tard ?",
+      k: ["modifier", "profil", "mettre à jour", "changer"],
+      a: "Oui ! Sur \"Mon espace\", clique sur \"Mon compte\" puis \"Modifier mon profil\" — tu peux mettre à jour ton prénom, ta photo, ta situation, ta localisation à tout moment."
+    },
+    {
+      q: "C'est quoi AfricanYouth GiveBack ?",
+      k: ["qui", "quoi", "plateforme", "but", "objectif", "giveback"],
+      a: "AfricanYouth GiveBack est une plateforme créée par des étudiants du programme de bourses Mastercard Foundation à 2iE, pour centraliser les opportunités éducatives et accompagner les jeunes vulnérables dans leurs candidatures."
+    }
+  ];
+
+  const LIVE_INTENTS = [
+    {
+      k: ["quelles bourses", "bourses disponibles", "montre moi les bourses", "liste des bourses", "quelles opportunités", "bourse dispo", "quel bourse", "quelle bourse", "des bourses", "voir les bourses", "bourses actuelles"],
+      handler: async () => {
+        const { data } = await db.from("opportunities").select("title, type, deadline").order("deadline", { ascending: true }).limit(5);
+        if (!data || data.length === 0) return "Je n'ai trouvé aucune opportunité active en ce moment.";
+        const lines = data.map(o => `• ${o.title} (${o.type}${o.deadline ? ", clôture le " + new Date(o.deadline).toLocaleDateString("fr-FR") : ""})`);
+        return "Voici les prochaines opportunités à clôturer :\n" + lines.join("\n") + "\n\nVoir toutes les opportunités sur la page \"Opportunités\".";
+      }
+    },
+    {
+      k: ["quel mentor", "qui contacter", "mentor pour", "recommand", "besoin d'un mentor"],
+      handler: async () => {
+        const { data } = await db.from("mentors").select("nom, expertise").limit(5);
+        if (!data || data.length === 0) return "Aucun mentor n'est encore enregistré.";
+        const lines = data.map(m => `• ${m.nom} (${(m.expertise || []).join(", ") || "généraliste"})`);
+        return "Voici des mentors disponibles :\n" + lines.join("\n") + "\n\nVa sur la page \"Mentors\" pour les contacter directement.";
+      }
+    },
+    {
+      k: ["mes candidatures", "où en est ma candidature", "mon suivi", "j'ai postulé"],
+      handler: async () => {
+        const { data: { session } } = await db.auth.getSession();
+        if (!session) return "Connecte-toi d'abord pour que je puisse voir tes candidatures.";
+        const { data } = await db.from("applications").select("status, opportunities(title)").eq("user_id", session.user.id);
+        if (!data || data.length === 0) return "Tu n'as encore aucune candidature en suivi. Ajoute-en une depuis la page \"Opportunités\".";
+        const lines = data.map(a => `• ${a.opportunities?.title || "Opportunité"} — ${a.status}`);
+        return "Voici tes candidatures suivies :\n" + lines.join("\n");
+      }
+    },
+    {
+      k: ["combien de bourses", "nombre d'opportunités", "combien d'opportunités"],
+      handler: async () => {
+        const { count } = await db.from("opportunities").select("*", { count: "exact", head: true });
+        return `Il y a actuellement ${count || 0} opportunités vérifiées sur la plateforme (bourses, stages, emplois, formations).`;
+      }
+    },
+  ];
+
+  async function findAnswer(text) {
+    const q = text.toLowerCase();
+
+    for (const intent of LIVE_INTENTS) {
+      if (intent.k.some(k => q.includes(k))) {
+        try {
+          return await intent.handler();
+        } catch (e) {
+          return "Je n'ai pas réussi à récupérer cette information pour le moment. Réessaie dans un instant.";
+        }
+      }
+    }
+
+    let best = null, bestScore = 0;
+    FAQ.forEach(item => {
+      let score = 0;
+      item.k.forEach(k => { if (q.includes(k)) score++; });
+      if (score > bestScore) { bestScore = score; best = item; }
+    });
+    if (bestScore > 0) return best.a;
+
+    try {
+      const motsVides = new Set(["le","la","les","un","une","des","de","du","et","ou","est","sont","que","qui","quoi","pour","dans","sur","avec","sans","ce","cette","ces","parle","moi","dis","sais","connais","information","info","bourse","opportunité"]);
+      const motsRecherche = q.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9\s]/g, " ").split(/\s+/)
+        .filter(m => m.length > 2 && !motsVides.has(m));
+
+      if (motsRecherche.length > 0) {
+        const { data: opps } = await db.from("opportunities")
+          .select("title, description, deadline, lien, pays_cible, type, partenaire");
+        if (opps && opps.length) {
+          const correspondances = opps.map(o => {
+            const texteOpp = (o.title + " " + (o.pays_cible || []).join(" ") + " " + (o.partenaire || "")).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const score = motsRecherche.filter(m => texteOpp.includes(m)).length;
+            return { o, score };
+          }).filter(x => x.score > 0).sort((a, b) => b.score - a.score);
+
+          if (correspondances.length > 0) {
+            const opp = correspondances[0].o;
+            const deadline = opp.deadline ? new Date(opp.deadline).toLocaleDateString("fr-FR") : "à vérifier sur le site officiel";
+            let reponse = `${opp.title}\n\n${opp.description || ""}\n\n📅 Clôture : ${deadline}`;
+            if (opp.lien) reponse += `\n\n🔗 Pour postuler : ${opp.lien}`;
+            return reponse;
+          }
+        }
+      }
+    } catch (e) { /* si la recherche échoue, on continue vers le PDF/message par défaut */ }
+
+    const BACKEND_URL = "https://giveback-chat-backend.onrender.com";
+    const LIENS_PAR_SOURCE = {
+      "BOURSE BGIS GIVEBACK.docx": "https://www.2ie-edu.org/2ie-mastercard/",
+      "OFFRE-DE-BOURSES-DETUDES-POUR-BACHELOR-CENTRALE1_Giveback-.pdf": "https://www.2ie-edu.org/offre-de-20-bourses-detudes-pour-bachelor-centrale-2ie-african-bachelor-of-engineering-pour-la-rentree-2026-2027-a-linstitut-2ie-ouagadougou-burkina-faso-septembre-202/",
+      "OFFRE-DE-BOURSES-DETUDES-POUR-LE-BACHELOR-EN-GESTION-DES-INFRASTRUCTURES-ET-SERVICES1.pdf": "https://www.2ie-edu.org/2ie-mastercard/",
+    };
+    const LIENS_PAR_MOT_CLE = [
+      { mots: ["bgis", "gestion des infrastructures"], lien: "https://www.2ie-edu.org/2ie-mastercard/" },
+      { mots: ["centrale"], lien: "https://www.2ie-edu.org/offre-de-20-bourses-detudes-pour-bachelor-centrale-2ie-african-bachelor-of-engineering-pour-la-rentree-2026-2027-a-linstitut-2ie-ouagadougou-burkina-faso-septembre-202/" },
+      { mots: ["eree", "énergies renouvelables", "efficacité énergétique"], lien: "https://www.2ie-edu.org/20301-2/" },
+      { mots: ["emih", "installations hydrauliques"], lien: "https://www.2ie-edu.org/offre-de-20-bourses-detudes-de-bachelor-technologique-en-exploitation-et-maintenance-des-installations-hydrauliques-bt-emih-pour-la-rentree-2026-2027-a-2ie-ouagadougou-burkina-faso-septem/" },
+      { mots: ["anc", "assainissement non collectif", "mastère spécialisé"], lien: "https://www.2ie-edu.org/2ie-mastercard/" },
+    ];
+    const questionEnvoyee = (text.split(/\s+/).length <= 6 && lastUserQuestion)
+      ? `Contexte : la question précédente portait sur "${lastUserQuestion}". Nouvelle question : ${text}`
+      : text;
+
+    try {
+      const res = await fetch(BACKEND_URL + "/rag/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: questionEnvoyee }),
+      });
+      const data = await res.json();
+      if (data.success && data.answer) {
+        let reponse = data.answer;
+        let lien = (data.sources || []).map(s => LIENS_PAR_SOURCE[s]).find(Boolean);
+        const texteComplet = (lastUserQuestion + " " + text).toLowerCase();
+        if (!lien) {
+          const correspondance = LIENS_PAR_MOT_CLE.find(entry => entry.mots.some(m => texteComplet.includes(m)));
+          if (correspondance) lien = correspondance.lien;
+        }
+        if (lien) reponse += `\n\n🔗 Pour postuler : ${lien}`;
+        return reponse;
+      }
+    } catch (e) {
+      // Le serveur peut être endormi (plan gratuit) ou indisponible — on retombe sur le message par défaut
+    }
+
+    return "Je n'ai pas de réponse toute prête pour ça. Essaie de reformuler (ex: \"quelles bourses sont disponibles ?\", \"quel mentor pour...\"), ou contacte un mentor via la page \"Mentors\" pour une aide personnalisée.";
+  }
+
+  const fab = document.getElementById("assistantFab");
+  const panel = document.getElementById("assistantPanel");
+  const body = document.getElementById("assistantBody");
+  const input = document.getElementById("assistantInput");
+  const sendBtn = document.getElementById("assistantSend");
+  const closeBtn = document.getElementById("assistantClose");
+  const suggestions = document.getElementById("assistantSuggestions");
+
+  const suggestedQuestions = [
+    "Quelles bourses sont disponibles ?",
+    "Quel mentor pour m'aider ?",
+    "Où en sont mes candidatures ?",
+  ];
+  suggestedQuestions.forEach(q => {
+    const btn = document.createElement("button");
+    btn.textContent = q;
+    btn.addEventListener("click", () => ask(q));
+    suggestions.appendChild(btn);
+  });
+
+  function formatMessage(text) {
+    let propre = text
+      .replace(/\*\*(.*?)\*\*/g, "$1")
+      .replace(/\*(.*?)\*/g, "$1")
+      .replace(/^[-•]\s+/gm, "• ")
+      .replace(/#{1,6}\s?/g, "");
+
+    const escape = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const parts = propre.split(/(https?:\/\/[^\s]+)/g);
+    return parts.map(p =>
+      /^https?:\/\//.test(p)
+        ? `<a href="${escape(p)}" target="_blank" rel="noopener">${escape(p)}</a>`
+        : escape(p)
+    ).join("");
+  }
+
+  function addMsg(text, who) {
+    const div = document.createElement("div");
+    div.className = "assistant-msg " + who;
+    div.innerHTML = formatMessage(text);
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  let lastUserQuestion = "";
+
+  async function ask(text) {
+    if (!text.trim()) return;
+    addMsg(text, "user");
+    input.value = "";
+    addMsg("…", "bot");
+    const thinking = body.lastChild;
+    const answer = await findAnswer(text);
+    lastUserQuestion = text;
+    thinking.innerHTML = formatMessage(answer);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  fab.addEventListener("click", () => panel.classList.toggle("open"));
+  closeBtn.addEventListener("click", () => panel.classList.remove("open"));
+  sendBtn.addEventListener("click", () => ask(input.value));
+  input.addEventListener("keydown", (e) => { if (e.key === "Enter") ask(input.value); });
+})();
+</script>
+
+<script>
+document.querySelectorAll(".hamburger").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const nav = btn.closest("header").querySelector("nav.sans");
+    if (nav) nav.classList.toggle("open");
+  });
+});
+</script>
+<footer class="site-footer">
+  <div class="wrap footer-top">
+    <div class="footer-brand-col">
+      <div class="footer-brand-name">AfricanYouth GiveBack</div>
+      <p class="footer-brand-tagline">AfricanYouth GiveBack est un projet réalisé par des étudiants du programme Mastercard Foundation Scholars à l'Institut 2iE, dans le cadre du Give Back Activity. La plateforme centralise des opportunités provenant de nombreuses institutions africaines et internationales, et propose un accompagnement par des mentors bénévoles.</p>
+    </div>
+    <div class="footer-nav-col">
+      <h4>Le site</h4>
+      <a href="index.html">Opportunités</a>
+      <a href="mentors.html">Mentors</a>
+      <a href="formations.html">Mini-formations</a>
+      <a href="communaute.html">Communauté</a>
+      <a href="tutoriel.html">Comment ça marche</a>
+    </div>
+    <div class="footer-nav-col">
+      <h4>Accéder à Giveback</h4>
+      <a href="espace.html">Accéder à mon espace</a>
+      <a href="auth.html">Se connecter</a>
+      <a href="feedback.html">Donner votre avis</a>
+    </div>
+  </div>
+  <div class="wrap footer-bottom-row">
+    <span>© 2026 AfricanYouth GiveBack. Tous droits réservés. — Give Back Activity, Mastercard Foundation × Institut 2iE.</span>
+    <a href="confidentialite.html">Politique de confidentialité</a>
+  </div>
+  <div class="partner-logos-marquee">
+    <div class="partner-logos-track">
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+    </div>
+  </div>
+  <div class="footer-marquee">
+    <span class="footer-marquee-track">Cette plateforme est développée par des étudiants boursiers de la Fondation Mastercard en formation à l'Institut International d'Ingénierie de l'Eau et de l'Environnement (2iE) — elle ne constitue pas un service officiel de l'Institut 2iE ni de la Fondation Mastercard.</span>
+  </div>
+</footer>
+
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const saved = sessionStorage.getItem("giveback-theme") || "light";
+  root.setAttribute("data-theme", saved);
+
+  const MOON_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const SUN_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("themeToggleBtn");
+    if (!btn) return;
+
+    function updateIcon() {
+      const current = root.getAttribute("data-theme") || "light";
+      // L'icône affichée représente le thème vers lequel on bascule en cliquant
+      btn.innerHTML = current === "light" ? MOON_SVG : SUN_SVG;
+      btn.setAttribute("aria-label", current === "light" ? "Passer au thème sombre" : "Passer au thème clair");
+    }
+    updateIcon();
+
+    btn.addEventListener("click", () => {
+      const current = root.getAttribute("data-theme") || "light";
+      const next = current === "light" ? "dark" : "light";
+      root.setAttribute("data-theme", next);
+      sessionStorage.setItem("giveback-theme", next);
+      updateIcon();
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

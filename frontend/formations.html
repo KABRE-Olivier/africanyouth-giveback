@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AfricanYouth GiveBack — Mini-formations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .video-card{ background:var(--paper-raised); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .video-frame{ position:relative; width:100%; padding-top:56.25%; background:#000; }
+  .video-frame iframe{ position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+  .video-body{ padding:16px 18px; }
+  .video-body h3{ font-size:15px; margin:0 0 6px; font-weight:500; }
+  .video-body p{ font-family:Inter,sans-serif; font-size:12.5px; color:var(--ink-soft); margin:0; }
+  .cat-heading{ font-family:Inter,sans-serif; font-size:12px; font-weight:700; color:var(--gold); letter-spacing:.05em; text-transform:uppercase; margin:32px 0 14px; }
+  .cat-heading:first-of-type{ margin-top:0; }
+  .video-actions{ display:flex; gap:16px; border-top:1px solid var(--line); padding:10px 18px; align-items:center; flex-wrap:wrap; }
+  .who-reacted{ font-family:Inter,sans-serif; font-size:11px; color:var(--ink-soft); font-style:italic; }
+  .vid-like-btn{ background:none; border:none; font-family:Inter,sans-serif; font-size:12.5px; color:var(--ink-soft); display:flex; align-items:center; gap:5px; padding:0; }
+  .vid-like-btn.liked{ color:#C0392B; font-weight:600; }
+  .vid-comment-btn{ background:none; border:none; font-family:Inter,sans-serif; font-size:12.5px; color:var(--ink-soft); display:flex; align-items:center; gap:5px; padding:0; }
+  .vid-comments-zone{ display:none; padding:0 18px 14px; }
+  .vid-comments-zone.open{ display:block; }
+  .vid-comment{ padding:7px 0; border-top:1px solid var(--line); font-family:Inter,sans-serif; font-size:12px; }
+  .vid-comment b{ color:var(--forest); }
+  .vid-comment-form{ display:flex; gap:6px; margin-top:8px; }
+  .vid-comment-form input{ flex:1; border:1px solid var(--line); border-radius:6px; padding:6px 9px; font-size:12px; font-family:inherit; }
+  .vid-comment-form button{ background:var(--forest); color:var(--on-dark); border:none; padding:6px 12px; border-radius:6px; font-size:11.5px; font-family:Inter,sans-serif; font-weight:600; }
+</style>
+</head>
+<body>
+
+<div class="ambient-layer" style="display:none"><div class="wash"></div><div id="ambientParticles"></div></div>
+<div class="flash-infos">
+  <span class="flash-infos-label">⚡ Flash infos</span>
+  <div class="flash-infos-track">
+    <span id="flashInfosText"><span id="flashAccompagnement"></span><span id="flashDeadline1" data-until="2026-08-31">📌 Deadline UEMOA, MAINSTREAM et Bourses Mastercard/2iE : 30-31 août 2026 — ne ratez pas la date&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; </span>🎓 <span id="flashOppCount">28+</span> opportunités vérifiées disponibles sur la plateforme&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; 🤝 <span id="flashMentorCount">9</span> mentors disponibles pour vous accompagner gratuitement&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; <img src="logo-mastercard-foundation.png" class="flash-infos-logo" alt="Mastercard Foundation">Un projet mené par des étudiants boursiers de la Mastercard Foundation à <img src="logo-2ie-officiel.png" class="flash-infos-logo" alt="Institut 2iE">l'Institut 2iE&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; 📱 Retrouvez-nous sur Facebook, LinkedIn et notre chaîne WhatsApp</span>
+  </div>
+</div>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack" class="brand-mark">
+    <div class="brand-text">
+      <div class="brand-word">AfricanYouth GiveBack</div>
+      <div class="brand-tagline">Éducation, accès aux opportunités</div>
+    </div>
+  </a>
+  <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Changer de thème">🌙</button>
+  <button class="hamburger" aria-label="Menu">☰</button>
+  <nav class="sans">
+    <a href="index.html">Opportunités</a>
+    <a href="tutoriel.html">Comment ça marche</a>
+    <a href="formations.html">Mini-formations</a>
+    <a href="mentors.html">Mentors</a>
+    <a href="communaute.html">Communauté</a>
+    <a href="cv-builder.html">Mon CV</a>
+    <a href="feedback.html">Votre avis</a>
+    <a href="espace.html">Mon espace</a>
+  </nav>
+<script>
+(function () {
+  const page = (location.pathname.split("/").pop() || "index.html").replace(/\.html$/, "");
+  document.querySelectorAll("nav.sans a[href]").forEach(a => {
+    const hrefPage = a.getAttribute("href").replace(/\.html$/, "");
+    if (hrefPage === page || (page === "" && hrefPage === "index")) a.classList.add("page-active");
+  });
+})();
+</script>
+  <div class="social-icons-header">
+    <a href="https://www.facebook.com/profile.php?id=61593783893327" target="_blank" rel="noopener" class="social-icon social-fb" aria-label="Facebook" title="Facebook">f</a>
+    <a href="https://www.linkedin.com/company/144639927" target="_blank" rel="noopener" class="social-icon social-li" aria-label="LinkedIn" title="LinkedIn">in</a>
+    <a href="https://whatsapp.com/channel/0029Vb9Px9H2f3EELsdZdG2Y" target="_blank" rel="noopener" class="social-icon social-wa" aria-label="WhatsApp" title="Chaîne WhatsApp">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.35 5.07L2 22l5.07-1.32C8.53 21.5 10.22 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.62-1.28 1.18-1.77 1.24-.45.06-1.02.08-1.65-.1-.38-.11-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.07-1.42-1.07-2.7s.68-1.92.92-2.18c.24-.26.53-.32.7-.32l.5.01c.16.01.38-.06.6.45.22.53.75 1.83.82 1.96.07.13.11.29.02.47-.09.18-.14.29-.27.45-.13.16-.28.35-.4.47-.13.13-.27.27-.12.53.16.26.7 1.15 1.5 1.86 1.03.92 1.9 1.2 2.16 1.34.26.13.42.11.57-.07.16-.18.66-.77.83-1.03.18-.26.35-.22.6-.13.24.09 1.53.72 1.79.85.26.13.44.2.5.31.06.11.06.65-.16 1.27z"/></svg>
+    </a>
+    <a href="https://forms.gle/SzUAyUZCgj9gqtSo7" target="_blank" rel="noopener" class="social-icon social-form" aria-label="Donner votre avis" title="Aidez-nous à améliorer la plateforme">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 2h6a2 2 0 012 2v16a2 2 0 01-2 2H9a2 2 0 01-2-2V4a2 2 0 012-2z" stroke="currentColor" stroke-width="1.8"/><path d="M9 7h6M9 11h6M9 15h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </a>
+  </div>
+
+</header>
+
+<section class="page-shell">
+  <div class="shell-bg"></div>
+  <div class="shell-particles" id="heroParticles"></div>
+
+  <div class="hero-content" style="padding-top:56px; padding-bottom:8px;">
+    <h1>Mini-formations</h1>
+    <p class="lead">De courtes vidéos pour préparer vos candidatures : CV, lettre de motivation, et plus à venir.</p>
+  </div>
+
+  <div class="wrap shell-inner">
+  <div class="search-bar">
+    <svg class="search-bar-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <input type="text" id="searchInput" placeholder="Rechercher une formation, un mot-clé…">
+  </div>
+  <div id="filters" class="filters"></div>
+  <div id="content">
+    <p class="sans" style="color:var(--ink-soft)">Chargement…</p>
+  </div>
+  </div>
+</section>
+
+<script src="supabase-js.min.js"></script>
+<script src="supabaseClient.js"></script>
+<script>
+(async function () {
+  // Masque automatiquement toute deadline déjà passée dans le bandeau
+  document.querySelectorAll("[data-until]").forEach(el => {
+    const limite = new Date(el.getAttribute("data-until") + "T23:59:59");
+    if (new Date() > limite) el.remove();
+  });
+  try {
+    const elOpp = document.getElementById("flashOppCount");
+    if (elOpp) {
+      const { count } = await db.from("opportunities").select("*", { count: "exact", head: true });
+      if (count) elOpp.textContent = count + "+";
+    }
+  } catch (e) { /* silencieux, le texte par défaut reste affiché */ }
+  try {
+    const elMentor = document.getElementById("flashMentorCount");
+    if (elMentor) {
+      const { count } = await db.from("mentors").select("*", { count: "exact", head: true });
+      if (count) elMentor.textContent = count;
+    }
+  } catch (e) { /* silencieux */ }
+})();
+</script>
+<script>
+async function init() {
+  const { data: { session } } = await db.auth.getSession();
+  const currentUser = session ? session.user : null;
+  let currentPrenom = "Anonyme";
+  if (currentUser) {
+    const { data: profile } = await db.from("profiles").select("prenom").eq("id", currentUser.id).single();
+    currentPrenom = profile?.prenom || "Anonyme";
+  }
+
+  const { data, error } = await db
+    .from("formations")
+    .select("*")
+    .order("categorie", { ascending: true });
+
+  const content = document.getElementById("content");
+  content.innerHTML = "";
+
+  if (error) {
+    content.innerHTML = `<p class="sans" style="color:var(--danger)">Erreur : ${error.message}</p>`;
+    return;
+  }
+  if (!data || data.length === 0) {
+    content.innerHTML = `<div class="empty">Aucune mini-formation pour le moment. Ajoutes-en depuis Supabase (table "formations").</div>`;
+    return;
+  }
+
+  const categories = Array.from(new Set(data.map(f => f.categorie).filter(Boolean))).sort();
+  const filtersDiv = document.getElementById("filters");
+  const searchInput = document.getElementById("searchInput");
+  let activeCat = "Toutes";
+  let searchTerm = "";
+
+  searchInput.addEventListener("input", () => {
+    searchTerm = searchInput.value.trim().toLowerCase();
+    renderContent();
+  });
+
+  function renderFilters() {
+    filtersDiv.innerHTML = "";
+    const allChip = document.createElement("button");
+    allChip.className = "filter-chip" + (activeCat === "Toutes" ? " active" : "");
+    allChip.textContent = `Toutes (${data.length})`;
+    allChip.addEventListener("click", () => { activeCat = "Toutes"; renderFilters(); renderContent(); });
+    filtersDiv.appendChild(allChip);
+
+    categories.forEach(cat => {
+      const count = data.filter(f => f.categorie === cat).length;
+      const chip = document.createElement("button");
+      chip.className = "filter-chip" + (activeCat === cat ? " active" : "");
+      chip.textContent = `${cat} (${count})`;
+      chip.addEventListener("click", () => { activeCat = cat; renderFilters(); renderContent(); });
+      filtersDiv.appendChild(chip);
+    });
+  }
+
+  async function renderContent() {
+    let filtered = activeCat === "Toutes" ? data : data.filter(f => f.categorie === activeCat);
+    if (searchTerm) {
+      filtered = filtered.filter(f =>
+        (f.titre || "").toLowerCase().includes(searchTerm) ||
+        (f.description || "").toLowerCase().includes(searchTerm) ||
+        (f.categorie || "").toLowerCase().includes(searchTerm)
+      );
+    }
+
+    content.innerHTML = "";
+    if (filtered.length === 0) {
+      content.innerHTML = `<div class="empty">Aucune formation ne correspond à ta recherche.</div>`;
+      return;
+    }
+
+    const byCategory = {};
+    filtered.forEach(f => {
+      if (!byCategory[f.categorie]) byCategory[f.categorie] = [];
+      byCategory[f.categorie].push(f);
+    });
+
+    for (const cat of Object.keys(byCategory)) {
+      const heading = document.createElement("div");
+      heading.className = "cat-heading";
+      heading.textContent = cat;
+      content.appendChild(heading);
+
+      const grid = document.createElement("div");
+      grid.className = "grid";
+      for (const f of byCategory[cat]) {
+        const { data: allFormationLikes } = await db.from("formation_likes").select("user_id").eq("formation_id", f.id);
+        const likeCount = (allFormationLikes || []).length;
+        let iLiked = false;
+        if (currentUser) {
+          iLiked = (allFormationLikes || []).some(l => l.user_id === currentUser.id);
+        }
+
+        // Qui a aimé — noms affichés collés au bouton, comme sur Facebook
+        let whoLikedHtml = "";
+        const vidLikerIds = [...new Set((allFormationLikes || []).map(l => l.user_id).filter(Boolean))];
+        if (vidLikerIds.length > 0) {
+          const { data: vidLikerProfiles } = await db.from("profiles").select("id, prenom").in("id", vidLikerIds);
+          const idToName = {};
+          (vidLikerProfiles || []).forEach(pr => { idToName[pr.id] = pr.prenom || "Anonyme"; });
+          const names = vidLikerIds.map(id => idToName[id] || "Anonyme");
+          let label = names.length <= 3
+            ? names.join(", ")
+            : `${names.slice(0, 3).join(", ")} et ${names.length - 3} autre${names.length - 3 > 1 ? "s" : ""}`;
+          whoLikedHtml = `<div class="who-reacted">${label} ${vidLikerIds.length > 1 ? "ont aimé" : "a aimé"}</div>`;
+        }
+
+        const { count: commentCount } = await db.from("formation_comments").select("*", { count: "exact", head: true }).eq("formation_id", f.id);
+
+        const card = document.createElement("div");
+        card.className = "video-card";
+        card.innerHTML = `
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/${f.video_id}" title="${f.titre}" allowfullscreen></iframe>
+          </div>
+          <div class="video-body">
+            <h3>${f.titre}</h3>
+            <p>${f.description || ""}</p>
+          </div>
+          <div class="video-actions">
+            <button class="vid-like-btn ${iLiked ? "liked" : ""}" data-id="${f.id}">
+              ${iLiked ? "❤️" : "🤍"} <span>${likeCount || 0}</span>
+            </button>
+            ${whoLikedHtml}
+            <button class="vid-comment-btn" data-id="${f.id}">💬 <span>${commentCount || 0} commentaire${commentCount === 1 ? "" : "s"}</span></button>
+          </div>
+          <div class="vid-comments-zone" id="vidComments-${f.id}"></div>
+        `;
+        grid.appendChild(card);
+      }
+      content.appendChild(grid);
+    }
+
+    content.querySelectorAll(".vid-like-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (!currentUser) { window.location.href = "auth.html"; return; }
+        const fid = parseInt(btn.dataset.id, 10);
+        const liked = btn.classList.contains("liked");
+        if (liked) {
+          await db.from("formation_likes").delete().eq("formation_id", fid).eq("user_id", currentUser.id);
+        } else {
+          await db.from("formation_likes").insert({ formation_id: fid, user_id: currentUser.id });
+        }
+        renderContent();
+      });
+    });
+
+    content.querySelectorAll(".vid-comment-btn").forEach(btn => {
+      btn.addEventListener("click", () => toggleVidComments(parseInt(btn.dataset.id, 10)));
+    });
+  }
+
+  async function toggleVidComments(fid) {
+    const zone = document.getElementById("vidComments-" + fid);
+    if (zone.classList.contains("open")) { zone.classList.remove("open"); return; }
+    zone.classList.add("open");
+    zone.innerHTML = `<p class="sans" style="color:var(--ink-soft); font-size:12px;">Chargement…</p>`;
+
+    const { data: comments } = await db.from("formation_comments").select("*").eq("formation_id", fid).order("created_at", { ascending: true });
+    let html = "";
+    (comments || []).forEach(c => {
+      html += `<div class="vid-comment"><b>${c.auteur_prenom || "Anonyme"}</b> — ${c.contenu}</div>`;
+    });
+    if (!comments || comments.length === 0) {
+      html += `<p class="sans" style="color:var(--ink-soft); font-size:12px;">Aucun commentaire pour le moment.</p>`;
+    }
+    if (currentUser) {
+      html += `
+        <div class="vid-comment-form">
+          <input type="text" id="vidCommentInput-${fid}" placeholder="Écrire un commentaire…">
+          <button data-id="${fid}" class="vid-send-comment">Envoyer</button>
+        </div>
+      `;
+    }
+    zone.innerHTML = html;
+    if (currentUser) {
+      zone.querySelector(".vid-send-comment").addEventListener("click", async () => {
+        const input = document.getElementById("vidCommentInput-" + fid);
+        const text = input.value.trim();
+        if (!text) return;
+        await db.from("formation_comments").insert({ formation_id: fid, user_id: currentUser.id, auteur_prenom: currentPrenom, contenu: text });
+        await renderContent();
+        toggleVidComments(fid);
+      });
+    }
+  }
+
+  renderFilters();
+  renderContent();
+}
+init();
+</script>
+<script>
+(function () {
+  const zone = document.getElementById("heroParticles");
+  if (!zone) return;
+  const n = 26;
+  for (let i = 0; i < n; i++) {
+    const dot = document.createElement("span");
+    const size = 3 + Math.random() * 5;
+    dot.style.width = size + "px";
+    dot.style.height = size + "px";
+    dot.style.left = Math.random() * 100 + "%";
+    dot.style.top = Math.random() * 100 + "%";
+    dot.style.animationDuration = (5 + Math.random() * 6) + "s";
+    dot.style.animationDelay = (Math.random() * 6) + "s";
+    zone.appendChild(dot);
+  }
+})();
+</script>
+<button class="assistant-fab" id="assistantFab" aria-label="Ouvrir l'assistant">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"
+      stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="8" cy="12" r="1.15" fill="currentColor"/>
+    <circle cx="12" cy="12" r="1.15" fill="currentColor"/>
+    <circle cx="16" cy="12" r="1.15" fill="currentColor"/>
+  </svg>
+  <span class="fab-notif-dot"></span>
+</button>
+<div class="assistant-panel" id="assistantPanel">
+  <div class="assistant-header">
+    <span>🌱 Assistant Giveback</span>
+    <button id="assistantClose">✕</button>
+  </div>
+  <div class="assistant-body" id="assistantBody">
+    <div class="assistant-msg bot">Bonjour Je peux répondre aux questions courantes et aussi consulter les vraies données de la plateforme (bourses disponibles, mentors, tes candidatures). Choisis une question ou écris la tienne.</div>
+  </div>
+  <div class="assistant-suggestions" id="assistantSuggestions"></div>
+  <div class="assistant-input-row">
+    <input type="text" id="assistantInput" placeholder="Pose ta question…">
+    <button id="assistantSend">Envoyer</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  const FAQ = [
+    {
+      q: "Bonjour !",
+      k: ["salut", "bonjour", "bonsoir", "hello", "coucou", "cc"],
+      a: "Bonjour Comment puis-je t'aider ? Tu peux me demander \"quelles bourses sont disponibles\", \"quel mentor pour m'aider\", ou n'importe quelle question sur la plateforme."
+    },
+    {
+      q: "Comment créer un compte ?",
+      k: ["compte", "inscription", "inscrire", "créer un compte", "s'inscrire"],
+      a: "Clique sur \"Se connecter\" en haut à droite, puis sur l'onglet \"Créer un compte\". Remplis le formulaire, tu recevras un email de confirmation à valider avant de pouvoir te connecter."
+    },
+    {
+      q: "Comment contacter un mentor ?",
+      k: ["mentor", "contacter", "whatsapp", "accompagn", "aide"],
+      a: "Va sur la page \"Mentors\", choisis celui qui correspond à ton besoin, puis clique sur \"Demander ce mentor\" ou directement sur les liens Email/WhatsApp affichés sur sa carte."
+    },
+    {
+      q: "Le site est-il gratuit ?",
+      k: ["gratuit", "payant", "prix", "coût", "argent"],
+      a: "Oui, la plateforme est entièrement gratuite. Elle centralise des opportunités réelles (bourses, stages, formations) et un accompagnement par des mentors bénévoles."
+    },
+    {
+      q: "Comment suivre ma candidature ?",
+      k: ["suivre", "candidature", "suivi", "statut"],
+      a: "Sur une opportunité, clique sur \"Ajouter à mon suivi\" : elle apparaît alors dans \"Mon espace\". Attention, ça ne remplace pas la vraie candidature — tu dois aussi postuler sur le site officiel via le bouton \"Voir l'offre officielle\"."
+    },
+    {
+      q: "J'ai oublié mon mot de passe",
+      k: ["mot de passe", "oublié", "password", "reset"],
+      a: "La réinitialisation automatique n'est pas encore disponible. En attendant, contacte Kabre Olivier (coordinateur) via la page \"Mentors\" pour te débloquer."
+    },
+    {
+      q: "Comment publier dans la communauté ?",
+      k: ["publier", "communauté", "poster", "message", "partager"],
+      a: "Va sur la page \"Communauté\", connecte-toi si besoin, écris ton message dans la zone de texte en haut et clique sur \"Publier\". Les autres peuvent réagir et commenter."
+    },
+    {
+      q: "Puis-je modifier mon profil plus tard ?",
+      k: ["modifier", "profil", "mettre à jour", "changer"],
+      a: "Oui ! Sur \"Mon espace\", clique sur \"Mon compte\" puis \"Modifier mon profil\" — tu peux mettre à jour ton prénom, ta photo, ta situation, ta localisation à tout moment."
+    },
+    {
+      q: "C'est quoi AfricanYouth GiveBack ?",
+      k: ["qui", "quoi", "plateforme", "but", "objectif", "giveback"],
+      a: "AfricanYouth GiveBack est une plateforme créée par des étudiants du programme de bourses Mastercard Foundation à 2iE, pour centraliser les opportunités éducatives et accompagner les jeunes vulnérables dans leurs candidatures."
+    }
+  ];
+
+  const LIVE_INTENTS = [
+    {
+      k: ["quelles bourses", "bourses disponibles", "montre moi les bourses", "liste des bourses", "quelles opportunités", "bourse dispo", "quel bourse", "quelle bourse", "des bourses", "voir les bourses", "bourses actuelles"],
+      handler: async () => {
+        const { data } = await db.from("opportunities").select("title, type, deadline").order("deadline", { ascending: true }).limit(5);
+        if (!data || data.length === 0) return "Je n'ai trouvé aucune opportunité active en ce moment.";
+        const lines = data.map(o => `• ${o.title} (${o.type}${o.deadline ? ", clôture le " + new Date(o.deadline).toLocaleDateString("fr-FR") : ""})`);
+        return "Voici les prochaines opportunités à clôturer :\n" + lines.join("\n") + "\n\nVoir toutes les opportunités sur la page \"Opportunités\".";
+      }
+    },
+    {
+      k: ["quel mentor", "qui contacter", "mentor pour", "recommand", "besoin d'un mentor"],
+      handler: async () => {
+        const { data } = await db.from("mentors").select("nom, expertise").limit(5);
+        if (!data || data.length === 0) return "Aucun mentor n'est encore enregistré.";
+        const lines = data.map(m => `• ${m.nom} (${(m.expertise || []).join(", ") || "généraliste"})`);
+        return "Voici des mentors disponibles :\n" + lines.join("\n") + "\n\nVa sur la page \"Mentors\" pour les contacter directement.";
+      }
+    },
+    {
+      k: ["mes candidatures", "où en est ma candidature", "mon suivi", "j'ai postulé"],
+      handler: async () => {
+        const { data: { session } } = await db.auth.getSession();
+        if (!session) return "Connecte-toi d'abord pour que je puisse voir tes candidatures.";
+        const { data } = await db.from("applications").select("status, opportunities(title)").eq("user_id", session.user.id);
+        if (!data || data.length === 0) return "Tu n'as encore aucune candidature en suivi. Ajoute-en une depuis la page \"Opportunités\".";
+        const lines = data.map(a => `• ${a.opportunities?.title || "Opportunité"} — ${a.status}`);
+        return "Voici tes candidatures suivies :\n" + lines.join("\n");
+      }
+    },
+    {
+      k: ["combien de bourses", "nombre d'opportunités", "combien d'opportunités"],
+      handler: async () => {
+        const { count } = await db.from("opportunities").select("*", { count: "exact", head: true });
+        return `Il y a actuellement ${count || 0} opportunités vérifiées sur la plateforme (bourses, stages, emplois, formations).`;
+      }
+    },
+  ];
+
+  async function findAnswer(text) {
+    const q = text.toLowerCase();
+
+    for (const intent of LIVE_INTENTS) {
+      if (intent.k.some(k => q.includes(k))) {
+        try {
+          return await intent.handler();
+        } catch (e) {
+          return "Je n'ai pas réussi à récupérer cette information pour le moment. Réessaie dans un instant.";
+        }
+      }
+    }
+
+    let best = null, bestScore = 0;
+    FAQ.forEach(item => {
+      let score = 0;
+      item.k.forEach(k => { if (q.includes(k)) score++; });
+      if (score > bestScore) { bestScore = score; best = item; }
+    });
+    if (bestScore > 0) return best.a;
+
+    try {
+      const motsVides = new Set(["le","la","les","un","une","des","de","du","et","ou","est","sont","que","qui","quoi","pour","dans","sur","avec","sans","ce","cette","ces","parle","moi","dis","sais","connais","information","info","bourse","opportunité"]);
+      const motsRecherche = q.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9\s]/g, " ").split(/\s+/)
+        .filter(m => m.length > 2 && !motsVides.has(m));
+
+      if (motsRecherche.length > 0) {
+        const { data: opps } = await db.from("opportunities")
+          .select("title, description, deadline, lien, pays_cible, type, partenaire");
+        if (opps && opps.length) {
+          const correspondances = opps.map(o => {
+            const texteOpp = (o.title + " " + (o.pays_cible || []).join(" ") + " " + (o.partenaire || "")).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const score = motsRecherche.filter(m => texteOpp.includes(m)).length;
+            return { o, score };
+          }).filter(x => x.score > 0).sort((a, b) => b.score - a.score);
+
+          if (correspondances.length > 0) {
+            const opp = correspondances[0].o;
+            const deadline = opp.deadline ? new Date(opp.deadline).toLocaleDateString("fr-FR") : "à vérifier sur le site officiel";
+            let reponse = `${opp.title}\n\n${opp.description || ""}\n\n📅 Clôture : ${deadline}`;
+            if (opp.lien) reponse += `\n\n🔗 Pour postuler : ${opp.lien}`;
+            return reponse;
+          }
+        }
+      }
+    } catch (e) { /* si la recherche échoue, on continue vers le PDF/message par défaut */ }
+
+    const BACKEND_URL = "https://giveback-chat-backend.onrender.com";
+    const LIENS_PAR_SOURCE = {
+      "BOURSE BGIS GIVEBACK.docx": "https://www.2ie-edu.org/2ie-mastercard/",
+      "OFFRE-DE-BOURSES-DETUDES-POUR-BACHELOR-CENTRALE1_Giveback-.pdf": "https://www.2ie-edu.org/offre-de-20-bourses-detudes-pour-bachelor-centrale-2ie-african-bachelor-of-engineering-pour-la-rentree-2026-2027-a-linstitut-2ie-ouagadougou-burkina-faso-septembre-202/",
+      "OFFRE-DE-BOURSES-DETUDES-POUR-LE-BACHELOR-EN-GESTION-DES-INFRASTRUCTURES-ET-SERVICES1.pdf": "https://www.2ie-edu.org/2ie-mastercard/",
+    };
+    const LIENS_PAR_MOT_CLE = [
+      { mots: ["bgis", "gestion des infrastructures"], lien: "https://www.2ie-edu.org/2ie-mastercard/" },
+      { mots: ["centrale"], lien: "https://www.2ie-edu.org/offre-de-20-bourses-detudes-pour-bachelor-centrale-2ie-african-bachelor-of-engineering-pour-la-rentree-2026-2027-a-linstitut-2ie-ouagadougou-burkina-faso-septembre-202/" },
+      { mots: ["eree", "énergies renouvelables", "efficacité énergétique"], lien: "https://www.2ie-edu.org/20301-2/" },
+      { mots: ["emih", "installations hydrauliques"], lien: "https://www.2ie-edu.org/offre-de-20-bourses-detudes-de-bachelor-technologique-en-exploitation-et-maintenance-des-installations-hydrauliques-bt-emih-pour-la-rentree-2026-2027-a-2ie-ouagadougou-burkina-faso-septem/" },
+      { mots: ["anc", "assainissement non collectif", "mastère spécialisé"], lien: "https://www.2ie-edu.org/2ie-mastercard/" },
+    ];
+    const questionEnvoyee = (text.split(/\s+/).length <= 6 && lastUserQuestion)
+      ? `Contexte : la question précédente portait sur "${lastUserQuestion}". Nouvelle question : ${text}`
+      : text;
+
+    try {
+      const res = await fetch(BACKEND_URL + "/rag/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: questionEnvoyee }),
+      });
+      const data = await res.json();
+      if (data.success && data.answer) {
+        let reponse = data.answer;
+        let lien = (data.sources || []).map(s => LIENS_PAR_SOURCE[s]).find(Boolean);
+        const texteComplet = (lastUserQuestion + " " + text).toLowerCase();
+        if (!lien) {
+          const correspondance = LIENS_PAR_MOT_CLE.find(entry => entry.mots.some(m => texteComplet.includes(m)));
+          if (correspondance) lien = correspondance.lien;
+        }
+        if (lien) reponse += `\n\n🔗 Pour postuler : ${lien}`;
+        return reponse;
+      }
+    } catch (e) {
+      // Le serveur peut être endormi (plan gratuit) ou indisponible — on retombe sur le message par défaut
+    }
+
+    return "Je n'ai pas de réponse toute prête pour ça. Essaie de reformuler (ex: \"quelles bourses sont disponibles ?\", \"quel mentor pour...\"), ou contacte un mentor via la page \"Mentors\" pour une aide personnalisée.";
+  }
+
+  const fab = document.getElementById("assistantFab");
+  const panel = document.getElementById("assistantPanel");
+  const body = document.getElementById("assistantBody");
+  const input = document.getElementById("assistantInput");
+  const sendBtn = document.getElementById("assistantSend");
+  const closeBtn = document.getElementById("assistantClose");
+  const suggestions = document.getElementById("assistantSuggestions");
+
+  const suggestedQuestions = [
+    "Quelles bourses sont disponibles ?",
+    "Quel mentor pour m'aider ?",
+    "Où en sont mes candidatures ?",
+  ];
+  suggestedQuestions.forEach(q => {
+    const btn = document.createElement("button");
+    btn.textContent = q;
+    btn.addEventListener("click", () => ask(q));
+    suggestions.appendChild(btn);
+  });
+
+  function formatMessage(text) {
+    let propre = text
+      .replace(/\*\*(.*?)\*\*/g, "$1")
+      .replace(/\*(.*?)\*/g, "$1")
+      .replace(/^[-•]\s+/gm, "• ")
+      .replace(/#{1,6}\s?/g, "");
+
+    const escape = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const parts = propre.split(/(https?:\/\/[^\s]+)/g);
+    return parts.map(p =>
+      /^https?:\/\//.test(p)
+        ? `<a href="${escape(p)}" target="_blank" rel="noopener">${escape(p)}</a>`
+        : escape(p)
+    ).join("");
+  }
+
+  function addMsg(text, who) {
+    const div = document.createElement("div");
+    div.className = "assistant-msg " + who;
+    div.innerHTML = formatMessage(text);
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  let lastUserQuestion = "";
+
+  async function ask(text) {
+    if (!text.trim()) return;
+    addMsg(text, "user");
+    input.value = "";
+    addMsg("…", "bot");
+    const thinking = body.lastChild;
+    const answer = await findAnswer(text);
+    lastUserQuestion = text;
+    thinking.innerHTML = formatMessage(answer);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  fab.addEventListener("click", () => panel.classList.toggle("open"));
+  closeBtn.addEventListener("click", () => panel.classList.remove("open"));
+  sendBtn.addEventListener("click", () => ask(input.value));
+  input.addEventListener("keydown", (e) => { if (e.key === "Enter") ask(input.value); });
+})();
+</script>
+
+<script>
+document.querySelectorAll(".hamburger").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const nav = btn.closest("header").querySelector("nav.sans");
+    if (nav) nav.classList.toggle("open");
+  });
+});
+</script>
+<footer class="site-footer">
+  <div class="wrap footer-top">
+    <div class="footer-brand-col">
+      <div class="footer-brand-name">AfricanYouth GiveBack</div>
+      <p class="footer-brand-tagline">AfricanYouth GiveBack est un projet réalisé par des étudiants du programme Mastercard Foundation Scholars à l'Institut 2iE, dans le cadre du Give Back Activity. La plateforme centralise des opportunités provenant de nombreuses institutions africaines et internationales, et propose un accompagnement par des mentors bénévoles.</p>
+    </div>
+    <div class="footer-nav-col">
+      <h4>Le site</h4>
+      <a href="index.html">Opportunités</a>
+      <a href="mentors.html">Mentors</a>
+      <a href="formations.html">Mini-formations</a>
+      <a href="communaute.html">Communauté</a>
+      <a href="tutoriel.html">Comment ça marche</a>
+    </div>
+    <div class="footer-nav-col">
+      <h4>Accéder à Giveback</h4>
+      <a href="espace.html">Accéder à mon espace</a>
+      <a href="auth.html">Se connecter</a>
+      <a href="feedback.html">Donner votre avis</a>
+    </div>
+  </div>
+  <div class="wrap footer-bottom-row">
+    <span>© 2026 AfricanYouth GiveBack. Tous droits réservés. — Give Back Activity, Mastercard Foundation × Institut 2iE.</span>
+    <a href="confidentialite.html">Politique de confidentialité</a>
+  </div>
+  <div class="partner-logos-marquee">
+    <div class="partner-logos-track">
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+    </div>
+  </div>
+  <div class="footer-marquee">
+    <span class="footer-marquee-track">Cette plateforme est développée par des étudiants boursiers de la Fondation Mastercard en formation à l'Institut International d'Ingénierie de l'Eau et de l'Environnement (2iE) — elle ne constitue pas un service officiel de l'Institut 2iE ni de la Fondation Mastercard.</span>
+  </div>
+</footer>
+
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const saved = sessionStorage.getItem("giveback-theme") || "light";
+  root.setAttribute("data-theme", saved);
+
+  const MOON_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const SUN_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("themeToggleBtn");
+    if (!btn) return;
+
+    function updateIcon() {
+      const current = root.getAttribute("data-theme") || "light";
+      // L'icône affichée représente le thème vers lequel on bascule en cliquant
+      btn.innerHTML = current === "light" ? MOON_SVG : SUN_SVG;
+      btn.setAttribute("aria-label", current === "light" ? "Passer au thème sombre" : "Passer au thème clair");
+    }
+    updateIcon();
+
+    btn.addEventListener("click", () => {
+      const current = root.getAttribute("data-theme") || "light";
+      const next = current === "light" ? "dark" : "light";
+      root.setAttribute("data-theme", next);
+      sessionStorage.setItem("giveback-theme", next);
+      updateIcon();
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

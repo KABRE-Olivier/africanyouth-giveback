@@ -1,0 +1,284 @@
+<button class="assistant-fab" id="assistantFab" aria-label="Ouvrir l'assistant">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"
+      stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="8" cy="12" r="1.15" fill="currentColor"/>
+    <circle cx="12" cy="12" r="1.15" fill="currentColor"/>
+    <circle cx="16" cy="12" r="1.15" fill="currentColor"/>
+  </svg>
+  <span class="fab-notif-dot"></span>
+</button>
+<div class="assistant-panel" id="assistantPanel">
+  <div class="assistant-header">
+    <span>🌱 Assistant Giveback</span>
+    <button id="assistantClose">✕</button>
+  </div>
+  <div class="assistant-body" id="assistantBody">
+    <div class="assistant-msg bot">Bonjour Je peux répondre aux questions courantes et aussi consulter les vraies données de la plateforme (bourses disponibles, mentors, tes candidatures). Choisis une question ou écris la tienne.</div>
+  </div>
+  <div class="assistant-suggestions" id="assistantSuggestions"></div>
+  <div class="assistant-input-row">
+    <input type="text" id="assistantInput" placeholder="Pose ta question…">
+    <button id="assistantSend">Envoyer</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  const FAQ = [
+    {
+      q: "Bonjour !",
+      k: ["salut", "bonjour", "bonsoir", "hello", "coucou", "cc"],
+      a: "Bonjour Comment puis-je t'aider ? Tu peux me demander \"quelles bourses sont disponibles\", \"quel mentor pour m'aider\", ou n'importe quelle question sur la plateforme."
+    },
+    {
+      q: "Comment créer un compte ?",
+      k: ["compte", "inscription", "inscrire", "créer un compte", "s'inscrire"],
+      a: "Clique sur \"Se connecter\" en haut à droite, puis sur l'onglet \"Créer un compte\". Remplis le formulaire, tu recevras un email de confirmation à valider avant de pouvoir te connecter."
+    },
+    {
+      q: "Comment contacter un mentor ?",
+      k: ["mentor", "contacter", "whatsapp", "accompagn", "aide"],
+      a: "Va sur la page \"Mentors\", choisis celui qui correspond à ton besoin, puis clique sur \"Demander ce mentor\" ou directement sur les liens Email/WhatsApp affichés sur sa carte."
+    },
+    {
+      q: "Le site est-il gratuit ?",
+      k: ["gratuit", "payant", "prix", "coût", "argent"],
+      a: "Oui, la plateforme est entièrement gratuite. Elle centralise des opportunités réelles (bourses, stages, formations) et un accompagnement par des mentors bénévoles."
+    },
+    {
+      q: "Comment suivre ma candidature ?",
+      k: ["suivre", "candidature", "suivi", "statut"],
+      a: "Sur une opportunité, clique sur \"Ajouter à mon suivi\" : elle apparaît alors dans \"Mon espace\". Attention, ça ne remplace pas la vraie candidature — tu dois aussi postuler sur le site officiel via le bouton \"Voir l'offre officielle\"."
+    },
+    {
+      q: "J'ai oublié mon mot de passe",
+      k: ["mot de passe", "oublié", "password", "reset"],
+      a: "La réinitialisation automatique n'est pas encore disponible. En attendant, contacte Kabre Olivier (coordinateur) via la page \"Mentors\" pour te débloquer."
+    },
+    {
+      q: "Comment publier dans la communauté ?",
+      k: ["publier", "communauté", "poster", "message", "partager"],
+      a: "Va sur la page \"Communauté\", connecte-toi si besoin, écris ton message dans la zone de texte en haut et clique sur \"Publier\". Les autres peuvent réagir et commenter."
+    },
+    {
+      q: "Puis-je modifier mon profil plus tard ?",
+      k: ["modifier", "profil", "mettre à jour", "changer"],
+      a: "Oui ! Sur \"Mon espace\", clique sur \"Mon compte\" puis \"Modifier mon profil\" — tu peux mettre à jour ton prénom, ta photo, ta situation, ta localisation à tout moment."
+    },
+    {
+      q: "C'est quoi AfricanYouth GiveBack ?",
+      k: ["qui", "quoi", "plateforme", "but", "objectif", "giveback"],
+      a: "AfricanYouth GiveBack est une plateforme créée par des étudiants du programme de bourses Mastercard Foundation à 2iE, pour centraliser les opportunités éducatives et accompagner les jeunes vulnérables dans leurs candidatures."
+    }
+  ];
+
+  const LIVE_INTENTS = [
+    {
+      k: ["quelles bourses", "bourses disponibles", "montre moi les bourses", "liste des bourses", "quelles opportunités", "bourse dispo", "quel bourse", "quelle bourse", "des bourses", "voir les bourses", "bourses actuelles"],
+      handler: async () => {
+        const { data } = await db.from("opportunities").select("title, type, deadline").order("deadline", { ascending: true }).limit(5);
+        if (!data || data.length === 0) return "Je n'ai trouvé aucune opportunité active en ce moment.";
+        const lines = data.map(o => `• ${o.title} (${o.type}${o.deadline ? ", clôture le " + new Date(o.deadline).toLocaleDateString("fr-FR") : ""})`);
+        return "Voici les prochaines opportunités à clôturer :\n" + lines.join("\n") + "\n\nVoir toutes les opportunités sur la page \"Opportunités\".";
+      }
+    },
+    {
+      k: ["quel mentor", "qui contacter", "mentor pour", "recommand", "besoin d'un mentor"],
+      handler: async () => {
+        const { data } = await db.from("mentors").select("nom, expertise").limit(5);
+        if (!data || data.length === 0) return "Aucun mentor n'est encore enregistré.";
+        const lines = data.map(m => `• ${m.nom} (${(m.expertise || []).join(", ") || "généraliste"})`);
+        return "Voici des mentors disponibles :\n" + lines.join("\n") + "\n\nVa sur la page \"Mentors\" pour les contacter directement.";
+      }
+    },
+    {
+      k: ["mes candidatures", "où en est ma candidature", "mon suivi", "j'ai postulé"],
+      handler: async () => {
+        const { data: { session } } = await db.auth.getSession();
+        if (!session) return "Connecte-toi d'abord pour que je puisse voir tes candidatures.";
+        const { data } = await db.from("applications").select("status, opportunities(title)").eq("user_id", session.user.id);
+        if (!data || data.length === 0) return "Tu n'as encore aucune candidature en suivi. Ajoute-en une depuis la page \"Opportunités\".";
+        const lines = data.map(a => `• ${a.opportunities?.title || "Opportunité"} — ${a.status}`);
+        return "Voici tes candidatures suivies :\n" + lines.join("\n");
+      }
+    },
+    {
+      k: ["combien de bourses", "nombre d'opportunités", "combien d'opportunités"],
+      handler: async () => {
+        const { count } = await db.from("opportunities").select("*", { count: "exact", head: true });
+        return `Il y a actuellement ${count || 0} opportunités vérifiées sur la plateforme (bourses, stages, emplois, formations).`;
+      }
+    },
+  ];
+
+  async function findAnswer(text) {
+    const q = text.toLowerCase();
+
+    for (const intent of LIVE_INTENTS) {
+      if (intent.k.some(k => q.includes(k))) {
+        try {
+          return await intent.handler();
+        } catch (e) {
+          return "Je n'ai pas réussi à récupérer cette information pour le moment. Réessaie dans un instant.";
+        }
+      }
+    }
+
+    let best = null, bestScore = 0;
+    FAQ.forEach(item => {
+      let score = 0;
+      item.k.forEach(k => { if (q.includes(k)) score++; });
+      if (score > bestScore) { bestScore = score; best = item; }
+    });
+    if (bestScore > 0) return best.a;
+
+    // Avant de se rabattre sur les PDF (limités à 4 documents), on cherche
+    // directement dans les VRAIES opportunités de la plateforme (34+ bourses,
+    // stages, concours) — ça couvre bien plus large et utilise les vrais liens vérifiés.
+    try {
+      const motsVides = new Set(["le","la","les","un","une","des","de","du","et","ou","est","sont","que","qui","quoi","pour","dans","sur","avec","sans","ce","cette","ces","parle","moi","dis","sais","connais","information","info","bourse","opportunité"]);
+      const motsRecherche = q.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9\s]/g, " ").split(/\s+/)
+        .filter(m => m.length > 2 && !motsVides.has(m));
+
+      if (motsRecherche.length > 0) {
+        const { data: opps } = await db.from("opportunities")
+          .select("title, description, deadline, lien, pays_cible, type, partenaire");
+        if (opps && opps.length) {
+          const correspondances = opps.map(o => {
+            const texteOpp = (o.title + " " + (o.pays_cible || []).join(" ") + " " + (o.partenaire || "")).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const score = motsRecherche.filter(m => texteOpp.includes(m)).length;
+            return { o, score };
+          }).filter(x => x.score > 0).sort((a, b) => b.score - a.score);
+
+          if (correspondances.length > 0) {
+            const opp = correspondances[0].o;
+            const deadline = opp.deadline ? new Date(opp.deadline).toLocaleDateString("fr-FR") : "à vérifier sur le site officiel";
+            let reponse = `${opp.title}\n\n${opp.description || ""}\n\n📅 Clôture : ${deadline}`;
+            if (opp.lien) reponse += `\n\n🔗 Pour postuler : ${opp.lien}`;
+            return reponse;
+          }
+        }
+      }
+    } catch (e) { /* si la recherche échoue, on continue vers le PDF/message par défaut */ }
+
+    // Aucune réponse toute prête trouvée : on interroge le nouveau serveur IA
+    // (lit aussi les documents de bourses pour des réponses plus précises)
+    const BACKEND_URL = "https://giveback-chat-backend.onrender.com";
+    // Fait le lien entre un document indexé côté serveur IA et le vrai lien
+    // de candidature déjà vérifié sur la plateforme, pour ne jamais inventer une URL.
+    const LIENS_PAR_SOURCE = {
+      "BOURSE BGIS GIVEBACK.docx": "https://www.2ie-edu.org/2ie-mastercard/",
+      "OFFRE-DE-BOURSES-DETUDES-POUR-BACHELOR-CENTRALE1_Giveback-.pdf": "https://www.2ie-edu.org/offre-de-20-bourses-detudes-pour-bachelor-centrale-2ie-african-bachelor-of-engineering-pour-la-rentree-2026-2027-a-linstitut-2ie-ouagadougou-burkina-faso-septembre-202/",
+      "OFFRE-DE-BOURSES-DETUDES-POUR-LE-BACHELOR-EN-GESTION-DES-INFRASTRUCTURES-ET-SERVICES1.pdf": "https://www.2ie-edu.org/2ie-mastercard/",
+    };
+    // Liens précis par mot-clé, pour les bourses qui n'ont pas de document indexé
+    // dans le chat mais dont on a déjà vérifié le vrai lien de candidature.
+    const LIENS_PAR_MOT_CLE = [
+      { mots: ["bgis", "gestion des infrastructures"], lien: "https://www.2ie-edu.org/2ie-mastercard/" },
+      { mots: ["centrale"], lien: "https://www.2ie-edu.org/offre-de-20-bourses-detudes-pour-bachelor-centrale-2ie-african-bachelor-of-engineering-pour-la-rentree-2026-2027-a-linstitut-2ie-ouagadougou-burkina-faso-septembre-202/" },
+      { mots: ["eree", "énergies renouvelables", "efficacité énergétique"], lien: "https://www.2ie-edu.org/20301-2/" },
+      { mots: ["emih", "installations hydrauliques"], lien: "https://www.2ie-edu.org/offre-de-20-bourses-detudes-de-bachelor-technologique-en-exploitation-et-maintenance-des-installations-hydrauliques-bt-emih-pour-la-rentree-2026-2027-a-2ie-ouagadougou-burkina-faso-septem/" },
+      { mots: ["anc", "assainissement non collectif", "mastère spécialisé"], lien: "https://www.2ie-edu.org/2ie-mastercard/" },
+    ];
+    // Si la question est courte (probable relance : "je veux le lien", "et pour postuler ?"),
+    // on la combine avec la question précédente pour garder le fil de la conversation.
+    const questionEnvoyee = (text.split(/\s+/).length <= 6 && lastUserQuestion)
+      ? `Contexte : la question précédente portait sur "${lastUserQuestion}". Nouvelle question : ${text}`
+      : text;
+
+    try {
+      const res = await fetch(BACKEND_URL + "/rag/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: questionEnvoyee }),
+      });
+      const data = await res.json();
+      if (data.success && data.answer) {
+        let reponse = data.answer;
+        let lien = (data.sources || []).map(s => LIENS_PAR_SOURCE[s]).find(Boolean);
+        // Filet de sécurité : si le nom d'une bourse précise est mentionné (question
+        // actuelle ou précédente) mais qu'aucune source précise n'a été trouvée par
+        // l'IA, on ajoute quand même le bon lien vérifié.
+        const texteComplet = (lastUserQuestion + " " + text).toLowerCase();
+        if (!lien) {
+          const correspondance = LIENS_PAR_MOT_CLE.find(entry => entry.mots.some(m => texteComplet.includes(m)));
+          if (correspondance) lien = correspondance.lien;
+        }
+        if (lien) reponse += `\n\n🔗 Pour postuler : ${lien}`;
+        return reponse;
+      }
+    } catch (e) {
+      // Le serveur peut être endormi (plan gratuit) ou indisponible — on retombe sur le message par défaut
+    }
+
+    return "Je n'ai pas de réponse toute prête pour ça. Essaie de reformuler (ex: \"quelles bourses sont disponibles ?\", \"quel mentor pour...\"), ou contacte un mentor via la page \"Mentors\" pour une aide personnalisée.";
+  }
+
+  const fab = document.getElementById("assistantFab");
+  const panel = document.getElementById("assistantPanel");
+  const body = document.getElementById("assistantBody");
+  const input = document.getElementById("assistantInput");
+  const sendBtn = document.getElementById("assistantSend");
+  const closeBtn = document.getElementById("assistantClose");
+  const suggestions = document.getElementById("assistantSuggestions");
+
+  const suggestedQuestions = [
+    "Quelles bourses sont disponibles ?",
+    "Quel mentor pour m'aider ?",
+    "Où en sont mes candidatures ?",
+  ];
+  suggestedQuestions.forEach(q => {
+    const btn = document.createElement("button");
+    btn.textContent = q;
+    btn.addEventListener("click", () => ask(q));
+    suggestions.appendChild(btn);
+  });
+
+  function formatMessage(text) {
+    // Retire les symboles markdown que le modèle peut générer (gras, listes...)
+    let propre = text
+      .replace(/\*\*(.*?)\*\*/g, "$1")
+      .replace(/\*(.*?)\*/g, "$1")
+      .replace(/^[-•]\s+/gm, "• ")
+      .replace(/#{1,6}\s?/g, "");
+
+    // Transforme les vraies adresses web en liens cliquables
+    const escape = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const parts = propre.split(/(https?:\/\/[^\s]+)/g);
+    return parts.map(p =>
+      /^https?:\/\//.test(p)
+        ? `<a href="${escape(p)}" target="_blank" rel="noopener">${escape(p)}</a>`
+        : escape(p)
+    ).join("");
+  }
+
+  function addMsg(text, who) {
+    const div = document.createElement("div");
+    div.className = "assistant-msg " + who;
+    div.innerHTML = formatMessage(text);
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  let lastUserQuestion = "";
+
+  async function ask(text) {
+    if (!text.trim()) return;
+    addMsg(text, "user");
+    input.value = "";
+    addMsg("…", "bot");
+    const thinking = body.lastChild;
+    const answer = await findAnswer(text);
+    lastUserQuestion = text;
+    thinking.innerHTML = formatMessage(answer);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  fab.addEventListener("click", () => panel.classList.toggle("open"));
+  closeBtn.addEventListener("click", () => panel.classList.remove("open"));
+  sendBtn.addEventListener("click", () => ask(input.value));
+  input.addEventListener("keydown", (e) => { if (e.key === "Enter") ask(input.value); });
+})();
+</script>

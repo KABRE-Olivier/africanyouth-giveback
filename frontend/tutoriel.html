@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AfricanYouth GiveBack — Comment ça marche</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .tuto-wrap{ max-width:760px; margin:0 auto; padding:36px 20px 60px; }
+  .tuto-intro{ background:var(--paper-raised); border:1.5px solid var(--gold-soft); border-radius:14px; padding:20px 22px; margin:0 0 32px; font-family:Inter,sans-serif; font-size:14px; line-height:1.6; color:var(--ink); }
+  .tuto-step{ display:flex; gap:18px; margin:0 0 30px; }
+  .tuto-num{ flex:none; width:38px; height:38px; border-radius:50%; background:var(--forest); color:#fff; display:flex; align-items:center; justify-content:center; font-family:Inter,sans-serif; font-weight:800; font-size:16px; }
+  .tuto-body h3{ margin:2px 0 8px; font-size:17px; color:var(--forest-deep); }
+  .tuto-body p{ margin:0 0 8px; font-family:Inter,sans-serif; font-size:13.5px; line-height:1.65; color:var(--ink); }
+  .tuto-body .path{ background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:8px 12px; font-family:Inter,sans-serif; font-size:12.5px; color:var(--forest); font-weight:600; display:inline-block; margin:2px 0 10px; }
+  .tuto-body ul{ margin:6px 0; padding-left:20px; font-family:Inter,sans-serif; font-size:13.5px; color:var(--ink); line-height:1.6; }
+  .tuto-section-title{ font-family:Inter,sans-serif; font-weight:800; font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--gold); margin:44px 0 20px; padding-bottom:8px; border-bottom:2px solid var(--gold-soft); }
+  .tuto-tip{ background:var(--gold-soft); border-radius:8px; padding:10px 14px; font-family:Inter,sans-serif; font-size:12.5px; color:var(--forest-deep); margin:8px 0; }
+</style>
+</head>
+<script src="supabase-js.min.js"></script>
+<script src="supabaseClient.js"></script>
+<script>
+(async function () {
+  document.querySelectorAll("[data-until]").forEach(el => {
+    const limite = new Date(el.getAttribute("data-until") + "T23:59:59");
+    if (new Date() > limite) el.remove();
+  });
+  try {
+    const elOpp = document.getElementById("flashOppCount");
+    if (elOpp) {
+      const { count } = await db.from("opportunities").select("*", { count: "exact", head: true });
+      if (count) elOpp.textContent = count + "+";
+    }
+  } catch (e) { /* silencieux */ }
+  try {
+    const elMentor = document.getElementById("flashMentorCount");
+    if (elMentor) {
+      const { count } = await db.from("mentors").select("*", { count: "exact", head: true });
+      if (count) elMentor.textContent = count;
+    }
+  } catch (e) { /* silencieux */ }
+})();
+</script>
+<body>
+
+<div class="flash-infos">
+  <span class="flash-infos-label">⚡ Flash infos</span>
+  <div class="flash-infos-track">
+    <span id="flashInfosText"><span id="flashAccompagnement"></span><span id="flashDeadline1" data-until="2026-08-31">📌 Deadline UEMOA, MAINSTREAM et Bourses Mastercard/2iE : 30-31 août 2026 — ne ratez pas la date&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; </span>🎓 <span id="flashOppCount">28+</span> opportunités vérifiées disponibles sur la plateforme&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; 🤝 <span id="flashMentorCount">9</span> mentors disponibles pour vous accompagner gratuitement&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; <img src="logo-mastercard-foundation.png" class="flash-infos-logo" alt="Mastercard Foundation">Un projet mené par des étudiants boursiers de la Mastercard Foundation à <img src="logo-2ie-officiel.png" class="flash-infos-logo" alt="Institut 2iE">l'Institut 2iE&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; 📱 Retrouvez-nous sur Facebook, LinkedIn et notre chaîne WhatsApp</span>
+  </div>
+</div>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack" class="brand-mark">
+    <div class="brand-text">
+      <div class="brand-word">AfricanYouth GiveBack</div>
+      <div class="brand-tagline">Éducation, accès aux opportunités</div>
+    </div>
+  </a>
+  <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Changer de thème">🌙</button>
+  <button class="hamburger" aria-label="Menu">☰</button>
+  <nav class="sans">
+    <a href="index.html">Opportunités</a>
+    <a href="espace.html">Mon espace</a>
+    <a href="formations.html">Mini-formations</a>
+    <a href="mentors.html">Mentors</a>
+    <a href="communaute.html">Communauté</a>
+    <a href="cv-builder.html">Mon CV</a>
+    <a href="tutoriel.html">Comment ça marche</a>
+    <a href="feedback.html">Votre avis</a>
+    <a id="authLink" href="auth.html">Se connecter</a>
+  </nav>
+<script>
+(function () {
+  const page = (location.pathname.split("/").pop() || "index.html").replace(/\.html$/, "");
+  document.querySelectorAll("nav.sans a[href]").forEach(a => {
+    const hrefPage = a.getAttribute("href").replace(/\.html$/, "");
+    if (hrefPage === page || (page === "" && hrefPage === "index")) a.classList.add("page-active");
+  });
+})();
+</script>
+  <div class="social-icons-header">
+    <a href="https://www.facebook.com/profile.php?id=61593783893327" target="_blank" rel="noopener" class="social-icon social-fb" aria-label="Facebook" title="Facebook">f</a>
+    <a href="https://www.linkedin.com/company/144639927" target="_blank" rel="noopener" class="social-icon social-li" aria-label="LinkedIn" title="LinkedIn">in</a>
+    <a href="https://whatsapp.com/channel/0029Vb9Px9H2f3EELsdZdG2Y" target="_blank" rel="noopener" class="social-icon social-wa" aria-label="WhatsApp" title="Chaîne WhatsApp">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.35 5.07L2 22l5.07-1.32C8.53 21.5 10.22 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.62-1.28 1.18-1.77 1.24-.45.06-1.02.08-1.65-.1-.38-.11-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.07-1.42-1.07-2.7s.68-1.92.92-2.18c.24-.26.53-.32.7-.32l.5.01c.16.01.38-.06.6.45.22.53.75 1.83.82 1.96.07.13.11.29.02.47-.09.18-.14.29-.27.45-.13.16-.28.35-.4.47-.13.13-.27.27-.12.53.16.26.7 1.15 1.5 1.86 1.03.92 1.9 1.2 2.16 1.34.26.13.42.11.57-.07.16-.18.66-.77.83-1.03.18-.26.35-.22.6-.13.24.09 1.53.72 1.79.85.26.13.44.2.5.31.06.11.06.65-.16 1.27z"/></svg>
+    </a>
+    <a href="https://forms.gle/SzUAyUZCgj9gqtSo7" target="_blank" rel="noopener" class="social-icon social-form" aria-label="Donner votre avis" title="Aidez-nous à améliorer la plateforme">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 2h6a2 2 0 012 2v16a2 2 0 01-2 2H9a2 2 0 01-2-2V4a2 2 0 012-2z" stroke="currentColor" stroke-width="1.8"/><path d="M9 7h6M9 11h6M9 15h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </a>
+  </div>
+
+</header>
+
+<section class="page-shell">
+  <div class="tuto-wrap">
+    <h1 style="font-size:26px; margin:0 0 6px;">Comment utiliser la plateforme</h1>
+    <p class="lead" style="margin:0 0 20px;">Le guide complet, étape par étape, pour tirer le meilleur parti de AfricanYouth GiveBack.</p>
+
+    <div class="tuto-intro">
+      💡 Cette page rassemble tout ce qu'il faut savoir pour bien démarrer : créer son compte, trouver une opportunité adaptée, se faire accompagner par un mentor, préparer son dossier, et suivre sa candidature jusqu'au bout.
+    </div>
+
+    <div class="tuto-section-title">1. Créer votre compte</div>
+
+    <div class="tuto-step">
+      <div class="tuto-num">1</div>
+      <div class="tuto-body">
+        <h3>Inscrivez-vous</h3>
+        <span class="path">Menu → Se connecter → onglet "Créer un compte"</span>
+        <p>Remplissez : Prénom, Nom, Email, Mot de passe, Année de naissance, Nationalité, Pays de résidence, et votre situation (Nouveau bachelier / Étudiant en cours / Autre).</p>
+        <div class="tuto-tip">🔒 Les champs sur les situations vulnérables (handicap, orphelin, famille modeste) sont entièrement facultatifs et confidentiels — ils ne servent qu'à vous recommander des bourses adaptées, jamais affichés publiquement.</div>
+      </div>
+    </div>
+
+    <div class="tuto-step">
+      <div class="tuto-num">2</div>
+      <div class="tuto-body">
+        <h3>Mot de passe oublié ?</h3>
+        <span class="path">Page de connexion → lien "Mot de passe oublié ?"</span>
+        <p>Entrez votre email, vous recevrez un lien par email pour créer un nouveau mot de passe. Pensez à vérifier vos spams si l'email n'arrive pas tout de suite. Le lien est valable un temps limité — s'il a expiré, refaites simplement la demande.</p>
+      </div>
+    </div>
+
+    <div class="tuto-section-title">2. Trouver une opportunité</div>
+
+    <div class="tuto-step">
+      <div class="tuto-num">3</div>
+      <div class="tuto-body">
+        <h3>Parcourez le catalogue</h3>
+        <span class="path">Menu → Opportunités (page d'accueil)</span>
+        <p>Toutes les bourses, formations, concours et stages vérifiés s'affichent ici, triés par date limite la plus proche. Les opportunités Mastercard Foundation / 2iE apparaissent en premier, dans la rubrique "À la une".</p>
+        <ul>
+          <li>Cliquez sur une opportunité pour voir le détail complet</li>
+          <li>Le bouton <b>"Voir l'offre →"</b> ouvre le site officiel de l'organisme</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tuto-section-title">3. Se faire accompagner par un mentor</div>
+
+    <div class="tuto-step">
+      <div class="tuto-num">4</div>
+      <div class="tuto-body">
+        <h3>Contactez un mentor</h3>
+        <span class="path">Menu → Mentors</span>
+        <p>Chaque mentor affiche son domaine d'expertise (candidature, orientation, etc.). Cliquez sur <b>"Demander ce mentor"</b> — vous pouvez le contacter directement par WhatsApp ou email si affiché sur sa fiche.</p>
+      </div>
+    </div>
+
+    <div class="tuto-section-title">4. Préparer votre dossier</div>
+
+    <div class="tuto-step">
+      <div class="tuto-num">5</div>
+      <div class="tuto-body">
+        <h3>Rédigez votre CV et votre lettre</h3>
+        <span class="path">Menu → Mon CV</span>
+        <p>Deux options complémentaires :</p>
+        <ul>
+          <li><b>Modèles téléchargeables</b> — en haut de la page, 2 exemples de lettres pour les bourses 2iE/Mastercard, à consulter et personnaliser (jamais à recopier tel quel)</li>
+          <li><b>Outil de rédaction</b> — remplissez le formulaire (CV ou lettre), l'aperçu se met à jour en direct, puis téléchargez en PDF</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tuto-step">
+      <div class="tuto-num">6</div>
+      <div class="tuto-body">
+        <h3>Préparez votre entretien</h3>
+        <span class="path">Menu → Mini-formations</span>
+        <p>Des vidéos courtes pour préparer un entretien académique/bourse (en français et en anglais), un entretien d'embauche ou de stage, et un oral de concours.</p>
+      </div>
+    </div>
+
+    <div class="tuto-section-title">5. Suivre votre candidature</div>
+
+    <div class="tuto-step">
+      <div class="tuto-num">7</div>
+      <div class="tuto-body">
+        <h3>Ajoutez une opportunité à votre suivi</h3>
+        <span class="path">Menu → Mon espace</span>
+        <p>Depuis une opportunité qui vous intéresse, ajoutez-la à votre suivi personnel. Une fois votre candidature réellement envoyée à l'organisme (pas juste ajoutée en suivi), confirmez-le sur la plateforme — ça nous aide à mesurer l'impact réel de la plateforme.</p>
+      </div>
+    </div>
+
+    <div class="tuto-section-title">6. Échanger avec la communauté</div>
+
+    <div class="tuto-step">
+      <div class="tuto-num">8</div>
+      <div class="tuto-body">
+        <h3>Posez vos questions, partagez votre parcours</h3>
+        <span class="path">Menu → Communauté</span>
+        <p>Publiez un message, réagissez aux publications des autres, commentez. Vous pouvez voir qui a réagi ou commenté directement sous chaque publication.</p>
+      </div>
+    </div>
+
+    <div class="tuto-intro" style="margin-top:40px;">
+      🙋 Une question qui n'est pas couverte ici ? Utilisez l'assistant (bulle en bas à droite de chaque page) ou écrivez-nous depuis la page Communauté.
+    </div>
+  </div>
+</section>
+
+<script>
+document.querySelectorAll(".hamburger").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const nav = btn.closest("header").querySelector("nav.sans");
+    if (nav) nav.classList.toggle("open");
+  });
+});
+</script>
+<footer class="site-footer">
+  <div class="wrap footer-top">
+    <div class="footer-brand-col">
+      <div class="footer-brand-name">AfricanYouth GiveBack</div>
+      <p class="footer-brand-tagline">AfricanYouth GiveBack est un projet réalisé par des étudiants du programme Mastercard Foundation Scholars à l'Institut 2iE, dans le cadre du Give Back Activity. La plateforme centralise des opportunités provenant de nombreuses institutions africaines et internationales, et propose un accompagnement par des mentors bénévoles.</p>
+    </div>
+    <div class="footer-nav-col">
+      <h4>Le site</h4>
+      <a href="index.html">Opportunités</a>
+      <a href="mentors.html">Mentors</a>
+      <a href="formations.html">Mini-formations</a>
+      <a href="communaute.html">Communauté</a>
+      <a href="tutoriel.html">Comment ça marche</a>
+    </div>
+    <div class="footer-nav-col">
+      <h4>Accéder à Giveback</h4>
+      <a href="espace.html">Accéder à mon espace</a>
+      <a href="auth.html">Se connecter</a>
+      <a href="feedback.html">Donner votre avis</a>
+    </div>
+  </div>
+  <div class="wrap footer-bottom-row">
+    <span>© 2026 AfricanYouth GiveBack. Tous droits réservés. — Give Back Activity, Mastercard Foundation × Institut 2iE.</span>
+    <a href="confidentialite.html">Politique de confidentialité</a>
+  </div>
+  <div class="partner-logos-marquee">
+    <div class="partner-logos-track">
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+      <a href="index.html" class="own-brand-item">
+        <img src="logo-badge-complet.png" alt="AfricanYouth GiveBack">
+        <div class="own-brand-text">
+          <span class="own-brand-name">AfricanYouth GiveBack</span>
+          <span class="own-brand-tagline">Éducation, accès aux opportunités éducatives</span>
+        </div>
+      </a>
+      <a href="https://mastercardfdn.org" target="_blank" rel="noopener"><img src="logo-mastercard-foundation.png" alt="Mastercard Foundation"></a>
+      <a href="https://www.2ie-edu.org" target="_blank" rel="noopener"><img src="logo-2ie-officiel.png" alt="Institut 2iE"></a>
+    </div>
+  </div>
+  <div class="footer-marquee">
+    <span class="footer-marquee-track">Cette plateforme est développée par des étudiants boursiers de la Fondation Mastercard en formation à l'Institut International d'Ingénierie de l'Eau et de l'Environnement (2iE) — elle ne constitue pas un service officiel de l'Institut 2iE ni de la Fondation Mastercard.</span>
+  </div>
+</footer>
+
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const saved = sessionStorage.getItem("giveback-theme") || "light";
+  root.setAttribute("data-theme", saved);
+
+  const MOON_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const SUN_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("themeToggleBtn");
+    if (!btn) return;
+
+    function updateIcon() {
+      const current = root.getAttribute("data-theme") || "light";
+      // L'icône affichée représente le thème vers lequel on bascule en cliquant
+      btn.innerHTML = current === "light" ? MOON_SVG : SUN_SVG;
+      btn.setAttribute("aria-label", current === "light" ? "Passer au thème sombre" : "Passer au thème clair");
+    }
+    updateIcon();
+
+    btn.addEventListener("click", () => {
+      const current = root.getAttribute("data-theme") || "light";
+      const next = current === "light" ? "dark" : "light";
+      root.setAttribute("data-theme", next);
+      sessionStorage.setItem("giveback-theme", next);
+      updateIcon();
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
